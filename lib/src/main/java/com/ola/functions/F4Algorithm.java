@@ -58,23 +58,23 @@ public final class F4Algorithm {
             List<Pair<Polynomial<T>, Polynomial<T>>> pairs,
             List<Polynomial<T>> currentBasis
     ) {
-        var list = symbolicPreprocessing(pairs, currentBasis);
-        var leadingMonomials = new HashSet<Monomial<T>>();
-        for (var polynomial : list) {
+        var preprocessed = symbolicPreprocessing(pairs, currentBasis);
+        var leadingMonomials = new HashSet<Monomial<T>>(preprocessed.size());
+        for (var polynomial : preprocessed) {
             leadingMonomials.add(polynomial.leadingMonomial());
         }
 
-        var macaulayMatrix = new MacaulayMatrix<>(list);
+        var macaulayMatrix = new MacaulayMatrix<>(preprocessed);
         macaulayMatrix.rowEchelonReduction();
-        var polynomials = macaulayMatrix.polynomials();
-        var results = new ArrayList<Polynomial<T>>(polynomials.size());
-        for (var polynomial : polynomials) {
-            if (!leadingMonomials.contains(polynomial.leadingMonomial())) {
-                results.add(polynomial);
+        var reducedPolynomials = macaulayMatrix.polynomials();
+        var polynomials = new ArrayList<Polynomial<T>>(reducedPolynomials.size());
+        for (var reducedPolynomial : reducedPolynomials) {
+            if (!leadingMonomials.contains(reducedPolynomial.leadingMonomial())) {
+                polynomials.add(reducedPolynomial);
             }
         }
 
-        return results;
+        return polynomials;
     }
 
     private static <T extends Numeric> List<Polynomial<T>> symbolicPreprocessing(
@@ -82,6 +82,7 @@ public final class F4Algorithm {
             List<Polynomial<T>> currentBasis
     ) {
         var one = (T) currentBasis.getFirst().leadingCoefficient().one();
+        var zero = (T) currentBasis.getFirst().leadingCoefficient().zero();
         var list = sPolynomialsHalves(pairs);
         var done = new HashSet<Monomial<T>>();
         var allMonomials = new HashSet<Monomial<T>>();
@@ -108,7 +109,7 @@ public final class F4Algorithm {
             done.add(largestMonomial);
             for (var polynomial : currentBasis) {
                 var divisionResult = largestMonomial.divide(polynomial.leadingMonomial());
-                if (!divisionResult.coefficient().equals(divisionResult.coefficient().zero())) {
+                if (!divisionResult.coefficient().equals(zero)) {
                     var polynomialToAdd = polynomial.multiply(divisionResult);
                     list.add(polynomialToAdd);
 
@@ -127,7 +128,7 @@ public final class F4Algorithm {
     private static <T extends Numeric> List<Polynomial<T>> sPolynomialsHalves(
             List<Pair<Polynomial<T>, Polynomial<T>>> pairs
     ) {
-        var result = new ArrayList<Polynomial<T>>(pairs.size());
+        var result = new ArrayList<Polynomial<T>>(pairs.size() * 2);
         for (var pair : pairs) {
             var lcm = MonomialFunctions.lcm(pair.first().leadingMonomial(), pair.second().leadingMonomial());
             var leftQuotient = lcm.divide(pair.first().leadingTerm());

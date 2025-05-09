@@ -118,11 +118,11 @@ public final class Polynomial<T extends Numeric> {
 
         // Edge cases
         if (length == 0) {
-            return other.clone();
+            return other;
         }
 
         if (other.length == 0) {
-            return this.clone();
+            return this;
         }
 
         var resultingMonomials = new ArrayList<Monomial<T>>(Math.max(length, other.length));
@@ -174,7 +174,7 @@ public final class Polynomial<T extends Numeric> {
 
         // Edge cases
         if (other.length == 0) {
-            return this.clone();
+            return this;
         }
 
         var resultingMonomials = new ArrayList<Monomial<T>>(Math.max(length, other.length));
@@ -229,7 +229,7 @@ public final class Polynomial<T extends Numeric> {
 
         // Handle 1
         if (factor.equals(factor.one())) {
-            return this.clone();
+            return this;
         }
 
         var resultMonomials = new ArrayList<Monomial<T>>(length);
@@ -275,7 +275,7 @@ public final class Polynomial<T extends Numeric> {
 
         // Handle division by 1
         if (divisor.equals(divisor.one())) {
-            return this.clone();
+            return this;
         }
 
         var resultMonomials = new ArrayList<Monomial<T>>(length);

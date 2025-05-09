@@ -201,6 +201,21 @@ public final class SparseMonomial<T extends Numeric> extends Monomial<T> {
     }
 
     @Override
+    public boolean disjointWith(Monomial<T> other) {
+        if (!(other instanceof SparseMonomial<T> sparse)) {
+            throw new IllegalArgumentException("Expected a SparseMonomial instance.");
+        }
+
+        for (var i = 0; i < fieldSize; i++) {
+            if (bitset.get(i) && sparse.bitset.get(i)) {
+                return false;
+            }
+        }
+
+        return degree != 0;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;

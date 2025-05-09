@@ -5,17 +5,19 @@ import com.ola.number.Numeric;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-@SuppressWarnings("unchecked")
 public final class MonomialDivisionIterator<T extends Numeric> implements Iterator<Monomial<T>> {
-    private final T one;
     private final Monomial<T> internal;
-    private boolean hasNext = true;
     private final int[] current;
+    private boolean hasNext = true;
 
     public MonomialDivisionIterator(Monomial<T> internal) {
         this.internal = internal;
-        this.one = (T) internal.coefficient().one();
         this.current = new int[internal.fieldSize()];
+        for (var i = 0; i < internal.fieldSize(); i++) {
+            current[i] = internal.getExponent(i);
+        }
+
+        findNextDivisor();
     }
 
     @Override
@@ -29,30 +31,57 @@ public final class MonomialDivisionIterator<T extends Numeric> implements Iterat
             throw new NoSuchElementException();
         }
 
-        if (internal instanceof DenseMonomial<T>) {
-            var result = new DenseMonomial<>(current.clone(), one);
-            advance();
-            return result;
-        }
+        var result = internal instanceof DenseMonomial<T>
+                ? new DenseMonomial<>(current.clone(), internal.coefficient())
+                : new SparseMonomial<>(current.clone(), internal.coefficient());
 
-        var result = new SparseMonomial<>(current.clone(), one);
-        advance();
+        findNextDivisor();
         return result;
     }
 
-    private void advance() {
-        for (var i = internal.fieldSize() - 1; i >= 0; i--) {
-            if (current[i] < internal.getExponent(i)) {
-                current[i]++;
+    private void findNextDivisor() {
+        while (true) {
+            var decremented = false;
+            for (var i = internal.fieldSize() - 1; i >= 0; i--) {
+                if (current[i] > 0) {
+                    current[i]--;
+                    for (var j = i + 1; j < internal.fieldSize(); j++) {
+                        current[j] = internal.getExponent(j);
+                    }
 
-                for (var j = i + 1; j < internal.fieldSize(); j++) {
-                    current[j] = 0;
+                    decremented = true;
+                    break;
                 }
+            }
 
+            if (!decremented) {
+                hasNext = false;
+                return;
+            }
+
+            if (!isSameAsInternal() && !isAllZeros()) {
                 return;
             }
         }
+    }
 
-        hasNext = false;
+    private boolean isAllZeros() {
+        for (var exponent : current) {
+            if (exponent != 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isSameAsInternal() {
+        for (var exponentIndex = 0; exponentIndex < current.length; exponentIndex++) {
+            if (current[exponentIndex] != internal.getExponent(exponentIndex)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

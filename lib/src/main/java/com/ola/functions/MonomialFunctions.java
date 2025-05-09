@@ -1,12 +1,9 @@
 package com.ola.functions;
 
 import com.ola.number.Numeric;
-import com.ola.ordering.MonomialOrdering;
 import com.ola.structures.DenseMonomial;
 import com.ola.structures.Monomial;
 import com.ola.structures.SparseMonomial;
-
-import java.util.List;
 
 @SuppressWarnings("unchecked")
 public final class MonomialFunctions {
@@ -45,52 +42,4 @@ public final class MonomialFunctions {
 
         return new DenseMonomial<>(exponents, (T) x.coefficient().one());
     }
-
-    public static <T extends Numeric> int binarySearch(
-            List<Monomial<T>> haystack,
-            Monomial<T> needle,
-            MonomialOrdering<T> ordering
-    ) {
-        var low = 0;
-        var high = haystack.size() - 1;
-        while (low <= high) {
-            var mid = low + (high - low) / 2;
-            var comparison = ordering.compare(needle, haystack.get(mid));
-
-            if (comparison == 0) {
-                return mid;
-            } else if (comparison > 0) {
-                low = mid + 1;
-            } else {
-                high = mid - 1;
-            }
-        }
-
-        return -1;
-    }
-
-    public static <T extends Numeric> boolean containsMonomial(
-            List<Monomial<T>> haystack,
-            Monomial<T> needle,
-            MonomialOrdering<T> ordering
-    ) {
-        int low = 0;
-        int high = haystack.size() - 1;
-
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
-            int comparison = ordering.compare(needle, haystack.get(mid));
-
-            if (comparison == 0) {
-                return true;
-            } else if (comparison > 0) {
-                low = mid + 1;
-            } else {
-                high = mid - 1;
-            }
-        }
-
-        return false;
-    }
-
 }

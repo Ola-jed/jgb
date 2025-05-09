@@ -2,9 +2,6 @@ package com.ola.structures;
 
 import com.ola.number.Numeric;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.IntBinaryOperator;
 
@@ -120,6 +117,21 @@ public final class DenseMonomial<T extends Numeric> extends Monomial<T> {
     @Override
     public Iterable<Monomial<T>> divisors() {
         return () -> new MonomialDivisionIterator<>(this);
+    }
+
+    @Override
+    public boolean disjointWith(Monomial<T> other) {
+        if (!(other instanceof DenseMonomial<T> dense)) {
+            throw new IllegalArgumentException("Expected a DenseMonomial instance.");
+        }
+
+        for (var i = 0; i < fieldSize; i++) {
+            if(exponents[i] != 0 && dense.exponents[i] != 0) {
+                return false;
+            }
+        }
+
+        return degree != 0;
     }
 
     @Override

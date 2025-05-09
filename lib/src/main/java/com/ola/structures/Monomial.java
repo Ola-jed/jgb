@@ -34,4 +34,6 @@ public abstract sealed class Monomial<T extends Numeric> permits DenseMonomial, 
     public abstract Monomial<T> withCoefficient(T newCoefficient);
 
     public abstract Iterable<Monomial<T>> divisors();
+
+    public abstract boolean disjointWith(Monomial<T> other);
 }
