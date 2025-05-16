@@ -108,6 +108,11 @@ public final class Rational implements Numeric {
     }
 
     @Override
+    public Numeric inverse() {
+        return new Rational(den, num);
+    }
+
+    @Override
     public Numeric one() {
         return one;
     }

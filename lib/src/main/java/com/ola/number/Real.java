@@ -60,6 +60,11 @@ public final class Real implements Numeric {
     }
 
     @Override
+    public Numeric inverse() {
+        return new Real(1 / internal);
+    }
+
+    @Override
     public Numeric one() {
         return ONE;
     }

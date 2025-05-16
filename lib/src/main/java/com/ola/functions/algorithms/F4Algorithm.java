@@ -1,5 +1,6 @@
-package com.ola.functions;
+package com.ola.functions.algorithms;
 
+import com.ola.functions.MonomialFunctions;
 import com.ola.number.Numeric;
 import com.ola.structures.MacaulayMatrix;
 import com.ola.structures.Monomial;

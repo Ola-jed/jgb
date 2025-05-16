@@ -1,19 +1,23 @@
 package com.ola;
 
 import com.ola.enums.PairSelectionStrategy;
-import com.ola.functions.BuchbergerAlgorithm;
-import com.ola.functions.F4Algorithm;
+import com.ola.functions.algorithms.BuchbergerAlgorithm;
+import com.ola.functions.algorithms.F4Algorithm;
 import com.ola.functions.GrobnerBasisAlgorithms;
-import com.ola.functions.ImprovedF4Algorithm;
+import com.ola.functions.algorithms.ImprovedF4Algorithm;
+import com.ola.functions.algorithms.M4GBAlgorithm;
+import com.ola.number.Complex;
 import com.ola.number.GaloisFieldElement;
+import com.ola.number.Rational;
+import com.ola.number.Real;
 import com.ola.providers.ReimerGenerator;
 import com.ola.structures.PolynomialRing;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            var ring = new PolynomialRing(GaloisFieldElement.class, new String[]{"x", "y", "z", "t"});
-            var polynomials = ReimerGenerator.get(4);
+            var ring = new PolynomialRing(GaloisFieldElement.class, new String[]{"x", "y", "z"});
+            var polynomials = ReimerGenerator.get(3);
             for (var polynomial : polynomials) {
                 System.out.println(ring.format(polynomial));
             }
@@ -67,6 +71,18 @@ public class Main {
             }
 
             System.out.println("The reduced grobner basis (after Improved F4) is");
+            reduced = GrobnerBasisAlgorithms.reduceGrobnerBasis(gb);
+            for (var p : reduced) {
+                System.out.println(ring.format(p));
+            }
+
+            System.out.println("##### The grobner basis (M4GB algorithm) is");
+            gb = M4GBAlgorithm.compute(polynomials);
+            for (var p : gb) {
+                System.out.println(ring.format(p));
+            }
+
+            System.out.println("The reduced grobner basis (after M4GB) is");
             reduced = GrobnerBasisAlgorithms.reduceGrobnerBasis(gb);
             for (var p : reduced) {
                 System.out.println(ring.format(p));

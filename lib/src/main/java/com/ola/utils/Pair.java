@@ -26,8 +26,4 @@ public record Pair<T, U>(T first, U second) {
 
         return result;
     }
-
-    public Pair<T, U> copy() {
-        return new Pair<>(first, second);
-    }
 }

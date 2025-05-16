@@ -1,5 +1,6 @@
-package com.ola.functions;
+package com.ola.functions.algorithms;
 
+import com.ola.functions.MonomialFunctions;
 import com.ola.number.Numeric;
 import com.ola.structures.*;
 import com.ola.utils.Pair;
@@ -248,9 +249,9 @@ public final class ImprovedF4Algorithm {
         newPairs.addAll(otherPairs);
         var newBasis = new ArrayList<Polynomial<T>>();
         while (!oldBasis.isEmpty()) {
-            var poly = oldBasis.removeFirst();
-            if (poly.leadingMonomial().divide(polynomialLm).coefficient().equals(zero)) {
-                newBasis.add(poly);
+            var candidate = oldBasis.removeLast();
+            if (candidate.leadingMonomial().divide(polynomialLm).coefficient().equals(zero)) {
+                newBasis.add(candidate);
             }
         }
 

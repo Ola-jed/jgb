@@ -1,7 +1,6 @@
 package com.ola.structures;
 
 import com.ola.number.Numeric;
-import com.ola.number.Rational;
 import com.ola.ordering.MonomialOrdering;
 
 import java.util.ArrayList;
@@ -37,6 +36,14 @@ public final class Polynomial<T extends Numeric> {
         this.ordering = ordering;
         this.length = 1;
         this.degree = monomial.degree();
+    }
+
+    public Polynomial(int fieldSize, MonomialOrdering<T> ordering) {
+        this.monomials = List.of();
+        this.fieldSize = fieldSize;
+        this.ordering = ordering;
+        this.length = 0;
+        this.degree = 0;
     }
 
     // Constructor to avoid sorting when initializing after doing some operations because the monomials are already sorted
@@ -301,10 +308,6 @@ public final class Polynomial<T extends Numeric> {
                 var divisionResult = leadingTerm.divide(candidateLeadingTerm);
 
                 if (!divisionResult.coefficient().equals(divisionResult.coefficient().zero())) {
-                    var ring = new PolynomialRing(Rational.class, new String[]{"x", "y", "z", "t", "u"});
-
-
-
                     polynomial = polynomial.subtract(candidatePolynomial.multiply(divisionResult));
                     divided = true;
                     break;
@@ -314,7 +317,7 @@ public final class Polynomial<T extends Numeric> {
             if (!divided) {
                 var leadingTermPolynomial = new Polynomial<>(leadingTerm, ordering);
                 remainder = remainder.add(leadingTermPolynomial);
-                polynomial = polynomial.removeLeadingTerm();
+                polynomial = polynomial.tail();
             }
         }
 
@@ -322,7 +325,7 @@ public final class Polynomial<T extends Numeric> {
     }
 
     // Nice function to copy the polynomial and removing the leading term (used for reduction)
-    public Polynomial<T> removeLeadingTerm() {
+    public Polynomial<T> tail() {
         var monomialsToKeep = new ArrayList<>(monomials.subList(0, monomials.size() - 1));
         return new Polynomial<>(monomialsToKeep, fieldSize, ordering, length - 1);
     }

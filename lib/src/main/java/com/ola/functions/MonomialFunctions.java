@@ -10,6 +10,14 @@ public final class MonomialFunctions {
     private MonomialFunctions() {
     }
 
+    public static <T extends Numeric> Monomial<T> one(Monomial<T> model) {
+        if (model instanceof SparseMonomial<T>) {
+            return new SparseMonomial<>(new int[model.fieldSize()], (T) model.coefficient().one());
+        } else {
+            return new DenseMonomial<>(new int[model.fieldSize()], (T) model.coefficient().one());
+        }
+    }
+
     public static <T extends Numeric> Monomial<T> lcm(Monomial<T> x, Monomial<T> y) {
         // Both sparse, we can optimize
         if (x instanceof SparseMonomial<T> xAsSparse && y instanceof SparseMonomial<T> yAsSparse) {

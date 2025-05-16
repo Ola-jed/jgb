@@ -2,7 +2,7 @@ package com.ola.number;
 
 /**
  * Base structure for numbers that are part of a field
- * The fields supported are Q (Rational numbers), R (Real numbers) and C (Complex numbers)
+ * The fields supported are Q (Rational numbers), R (Real numbers), C (Complex numbers) and Z/pZ (Galois Fields)
  */
 public interface Numeric {
     Numeric add(Numeric other);
@@ -14,6 +14,8 @@ public interface Numeric {
     Numeric divide(Numeric other);
 
     Numeric negate();
+
+    Numeric inverse();
 
     Numeric one();
 

@@ -1,5 +1,6 @@
 package com.ola.functions;
 
+import com.ola.functions.algorithms.F4Algorithm;
 import com.ola.number.GaloisFieldElement;
 import com.ola.providers.Katsura3Generator;
 import com.ola.providers.Katsura4Generator;

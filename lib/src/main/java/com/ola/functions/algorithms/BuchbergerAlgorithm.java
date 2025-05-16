@@ -1,6 +1,8 @@
-package com.ola.functions;
+package com.ola.functions.algorithms;
 
 import com.ola.enums.PairSelectionStrategy;
+import com.ola.functions.MonomialFunctions;
+import com.ola.functions.PolynomialFunctions;
 import com.ola.number.Numeric;
 import com.ola.structures.Monomial;
 import com.ola.structures.Polynomial;

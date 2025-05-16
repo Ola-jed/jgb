@@ -11,7 +11,6 @@ public final class GrobnerBasisAlgorithms {
     private GrobnerBasisAlgorithms() {
     }
 
-
     public static <T extends Numeric> List<Polynomial<T>> reduceGrobnerBasis(List<Polynomial<T>> polynomials) {
         var minimized = minimizeGrobnerBasis(polynomials);
         var size = minimized.size();

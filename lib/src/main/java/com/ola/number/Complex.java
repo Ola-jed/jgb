@@ -66,6 +66,11 @@ public final class Complex implements Numeric {
     }
 
     @Override
+    public Numeric inverse() {
+        return new Complex(ComplexInternals.ONE.divide(this.internal));
+    }
+
+    @Override
     public Numeric one() {
         return one;
     }

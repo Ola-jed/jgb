@@ -73,6 +73,11 @@ public final class GaloisFieldElement implements Numeric {
         return new GaloisFieldElement(result, primeModulus);
     }
 
+    @Override
+    public Numeric inverse() {
+        return new GaloisFieldElement(modInverse(element, primeModulus), primeModulus);
+    }
+
     private void checkSameModulus(GaloisFieldElement other) {
         if (this.primeModulus != other.primeModulus) {
             throw new IllegalArgumentException("Elements must be from the same Galois Field");

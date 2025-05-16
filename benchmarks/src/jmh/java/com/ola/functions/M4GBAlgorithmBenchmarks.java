@@ -1,7 +1,6 @@
 package com.ola.functions;
 
-import com.ola.enums.PairSelectionStrategy;
-import com.ola.functions.algorithms.BuchbergerAlgorithm;
+import com.ola.functions.algorithms.M4GBAlgorithm;
 import com.ola.number.GaloisFieldElement;
 import com.ola.providers.Katsura3Generator;
 import com.ola.providers.Katsura4Generator;
@@ -19,13 +18,13 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 3, time = 1, timeUnit = TimeUnit.SECONDS)
 @Warmup(iterations = 3, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
-public class BuchbergerAlgorithmBenchmarks {
+public class M4GBAlgorithmBenchmarks {
     private List<Polynomial<GaloisFieldElement>> polynomials;
 
     @Param({"dense", "sparse"})
     private String monomialType;
 
-    @Param({"reimer3", "reimer4", "reimer5", "katsura3", "katsura4", "katsura5"})
+    @Param({"reimer3", "reimer4", "katsura3", "katsura4", "katsura5"})
     private String system;
 
     @Setup
@@ -43,22 +42,7 @@ public class BuchbergerAlgorithmBenchmarks {
     }
 
     @Benchmark
-    public List<Polynomial<GaloisFieldElement>> benchmarkFirstSelectionStrategy() {
-        return BuchbergerAlgorithm.compute(polynomials, PairSelectionStrategy.FIRST);
-    }
-
-    @Benchmark
-    public List<Polynomial<GaloisFieldElement>> benchmarkDegreeSelectionStrategy() {
-        return BuchbergerAlgorithm.compute(polynomials, PairSelectionStrategy.DEGREE);
-    }
-
-    @Benchmark
-    public List<Polynomial<GaloisFieldElement>> benchmarkNormalSelectionStrategy() {
-        return BuchbergerAlgorithm.compute(polynomials, PairSelectionStrategy.NORMAL);
-    }
-
-    @Benchmark
-    public List<Polynomial<GaloisFieldElement>> benchmarkSugarSelectionStrategy() {
-        return BuchbergerAlgorithm.compute(polynomials, PairSelectionStrategy.SUGAR);
+    public List<Polynomial<GaloisFieldElement>> compute() {
+        return M4GBAlgorithm.compute(polynomials);
     }
 }
