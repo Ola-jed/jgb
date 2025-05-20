@@ -1,21 +1,37 @@
 package com.ola;
 
+import com.ola.dsl.lexer.Lexer;
+import com.ola.dsl.tokens.Token;
 import com.ola.enums.PairSelectionStrategy;
+import com.ola.functions.GrobnerBasisAlgorithms;
 import com.ola.functions.algorithms.BuchbergerAlgorithm;
 import com.ola.functions.algorithms.F4Algorithm;
-import com.ola.functions.GrobnerBasisAlgorithms;
 import com.ola.functions.algorithms.ImprovedF4Algorithm;
 import com.ola.functions.algorithms.M4GBAlgorithm;
-import com.ola.number.Complex;
 import com.ola.number.GaloisFieldElement;
-import com.ola.number.Rational;
-import com.ola.number.Real;
 import com.ola.providers.ReimerGenerator;
 import com.ola.structures.PolynomialRing;
 
 public class Main {
     public static void main(String[] args) {
         try {
+            var lexer = new Lexer();
+            var tokens = lexer.scan("""
+                        @variables(x, y, z)
+                    @field(GF[5])
+                    @ordering(grevlex)
+                    
+                    4 + 2z^2 + 3y^2 + 2x^2
+                    4 + 2z^3 + 3y^3 + 2x^3
+                    4 + 2z^4 + 3y^4 + 2x^4
+                    """);
+
+            for (Token token : tokens) {
+                System.out.println(token);
+            }
+
+            System.exit(0);
+
             var ring = new PolynomialRing(GaloisFieldElement.class, new String[]{"x", "y", "z"});
             var polynomials = ReimerGenerator.get(3);
             for (var polynomial : polynomials) {

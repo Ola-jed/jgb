@@ -5,7 +5,7 @@ line             ::= (config | polynomial | comment) "\n"
 config           ::= variables_config | ordering_config | field_config
 variables_config ::= "@variables(" variables ")"
 variables        ::= symbol { "," symbol }
-symbol           ::= alphanumeric
+symbol           ::= lower_alpha {alpha | digit}
 ordering_config  ::= "@ordering(" ordering ")"
 ordering         ::= "lex" | "grlex" | "grevlex"
 field_config     ::= "@field(" field ")"
@@ -20,11 +20,13 @@ factor           ::= symbol ["^" integer] {factor}
 coefficient      ::= real | rational | integer | complex
 real             ::= ["-"] integer ["." integer]
 rational         ::= integer "/" integer
-complex          ::= real | [real] "i" | real ("+" | "-") real "i"
+complex          ::= real | [real] "I" | real ("+" | "-") real "I"
 
 comment          ::= "#" {any character except "\n"}
 
-alphanumeric     ::= (alpha | digit) {alpha | digit}
+lower_alpha      ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m"
+                         | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y"
+                         | "z" | "_"
 alpha            ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m"
                          | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y"
                          | "z" | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K"
@@ -33,6 +35,14 @@ alpha            ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" |
 integer          ::= digit {digit}
 digit            ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 ```
+
+### Reserved keywords
+- ordering
+- field
+- variables
+- lex
+- grlex
+- grevlex
 
 ### Example
 
@@ -46,4 +56,7 @@ xy + 2yz + 2zt + 2tu - t,
 2xz + 2yt + t^2 + 2zu - z,
 2xt + 2zt + 2yu - y,
 2x + 2y + 2z + 2t + u - 1
+
+# For complex numbers, use I
+# Uppercases cannot be used as fiurst characters in indeterminates to avoid confusion (eg: I and I, but xI is allowed)
 ```

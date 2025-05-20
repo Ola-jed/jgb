@@ -82,8 +82,21 @@ public final class Complex implements Numeric {
 
     @Override
     public String toString() {
-        return "(%s + %si)".formatted(internal.real(), internal.imag());
+        var real = internal.real();
+        var imag = internal.imag();
+
+        if (real == 0 && imag == 0) {
+            return "0";
+        } else if (imag == 0) {
+            return String.valueOf(real);
+        } else if (real == 0) {
+            return imag + "i";
+        } else {
+            var sign = imag > 0 ? " + " : " - ";
+            return String.format("(%s%s%si)", real, sign, Math.abs(imag));
+        }
     }
+
 
     @Override
     public boolean equals(Object o) {
