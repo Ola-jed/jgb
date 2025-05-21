@@ -44,31 +44,37 @@ public class Lexer {
             return;
         } else if (Character.isDigit(character)) {
             number();
-        } else if (matchKeyword('G', "F", TokenType.GF)) {
+        } else if (matchKeyword("dense", TokenType.DENSE)) {
+            // Use dense representation for monomials
+            return;
+        } else if (matchKeyword("sparse", TokenType.SPARSE)) {
+            // Use dense representation for monomials
+            return;
+        } else if (matchKeyword("GF", TokenType.GF)) {
             // Galois Field
             return;
-        } else if (matchKeyword('l', "ex", TokenType.LEX)) {
+        } else if (matchKeyword("lex", TokenType.LEX)) {
             // Lexical ordering
             return;
-        } else if (matchKeyword('g', "rlex", TokenType.GRLEX)) {
+        } else if (matchKeyword("grlex", TokenType.GRLEX)) {
             // Graded lexical ordering
             return;
-        } else if (matchKeyword('g', "revlex", TokenType.GREVLEX)) {
+        } else if (matchKeyword("grevlex", TokenType.GREVLEX)) {
             // Graded reverse lexical ordering
             return;
-        } else if (matchKeyword('v', "ariables", TokenType.VARIABLES_DEFINITION)) {
+        } else if (matchKeyword("variables", TokenType.VARIABLES_DEFINITION)) {
             // @variables
             return;
-        } else if (matchKeyword('f', "ield", TokenType.FIELD_DEFINITION)) {
+        } else if (matchKeyword("field", TokenType.FIELD_DEFINITION)) {
             // @field
             return;
-        } else if (matchKeyword('o', "rdering", TokenType.ORDERING_DEFINITION)) {
+        } else if (matchKeyword("ordering", TokenType.ORDERING_DEFINITION)) {
             // @ordering
             return;
         } else if ((Character.isLowerCase(character) && Character.isLetter(character)) || character == '_') {
             indeterminate();
         } else {
-            throw new IllegalArgumentException("Unexpected character %s on line %d".formatted(character, currentLine));
+            throw new IllegalArgumentException("Unexpected character '%s' on line %d".formatted(character, currentLine));
         }
     }
 
@@ -131,10 +137,10 @@ public class Lexer {
         return current >= source.length();
     }
 
-    private boolean matchKeyword(char startChar, String suffix, TokenType type) {
+    private boolean matchKeyword(String keyword, TokenType type) {
+        var suffix = keyword.substring(1);
         if (source.startsWith(suffix, current)) {
             var end = current + suffix.length();
-
             // Check that the next character (if any) is NOT a valid identifier char
             if (end < source.length()) {
                 var nextChar = source.charAt(end);
@@ -144,7 +150,7 @@ public class Lexer {
             }
 
             skip(suffix.length());
-            addToken(type, startChar + suffix);
+            addToken(type, keyword);
             return true;
         }
 

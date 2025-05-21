@@ -24,6 +24,8 @@ public enum TokenType {
     VARIABLES_DEFINITION,
     ORDERING_DEFINITION,
     FIELD_DEFINITION,
+    DENSE,
+    SPARSE,
     LEX,
     GRLEX,
     GREVLEX,

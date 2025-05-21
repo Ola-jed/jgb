@@ -20,6 +20,7 @@ public class Main {
                         @variables(x, y, z)
                     @field(GF[5])
                     @ordering(grevlex)
+                    @dense;
                     
                     4 + 2z^2 + 3y^2 + 2x^2
                     4 + 2z^3 + 3y^3 + 2x^3
