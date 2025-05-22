@@ -2,7 +2,7 @@
 content          ::= {line}
 line             ::= (config | polynomial | comment) "\n"
 
-config           ::= variables_config | ordering_config | field_config
+config           ::= variables_config | ordering_config | field_config | monomial_config
 variables_config ::= "@variables(" variables ")"
 variables        ::= symbol { "," symbol }
 symbol           ::= lower_alpha {alpha | digit}
@@ -11,7 +11,7 @@ ordering         ::= "lex" | "grlex" | "grevlex"
 field_config     ::= "@field(" field ")"
 field            ::= "R" | "Q" | "C" | galois_field
 galois_field     ::= "GF[" integer "]"
-
+monomial_config  ::= "@dense" | "@sparse"
 
 polynomial       ::= monomial { "+" monomial }
 monomial         ::= [coefficient] factor | coefficient
@@ -43,6 +43,8 @@ digit            ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 - lex
 - grlex
 - grevlex
+- dense
+- sparse
 
 ### Example
 
@@ -50,6 +52,7 @@ digit            ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 @variables(x, y, z, t)
 @field(Q)
 @ordering(lex)
+@dense
 
 2x^2 + y^2 + 2z^2 + 2t^2 + u^2 - u,
 xy + 2yz + 2zt + 2tu - t,
@@ -58,5 +61,5 @@ xy + 2yz + 2zt + 2tu - t,
 2x + 2y + 2z + 2t + u - 1
 
 # For complex numbers, use I
-# Uppercases cannot be used as fiurst characters in indeterminates to avoid confusion (eg: I and I, but xI is allowed)
+# Uppercases cannot be used as fiurst characters in indeterminates to avoid confusion, eg: I and I (I am confused too), but xI is allowed
 ```
