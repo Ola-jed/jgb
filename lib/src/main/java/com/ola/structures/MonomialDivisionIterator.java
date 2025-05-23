@@ -5,6 +5,15 @@ import com.ola.number.Numeric;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Iterator over the divisions of a monomial by all possible monomials
+ * with exponents less than or equal to those of the given monomial.
+ * <p>
+ * This iterator produces monomials that divide the original monomial.
+ * </p>
+ *
+ * @param <T> the field of the coefficients
+ */
 public final class MonomialDivisionIterator<T extends Numeric> implements Iterator<Monomial<T>> {
     private final Monomial<T> internal;
     private final int[] current;

@@ -1,5 +1,12 @@
 package com.ola.utils;
 
+/**
+ * Utility class providing common arithmetic operations.
+ * <p>
+ * This class is final and cannot be instantiated. It is intended to group
+ * static utility methods related to arithmetic operations.
+ * </p>
+ */
 public final class ArithmeticUtils {
     private ArithmeticUtils() {
     }
@@ -80,10 +87,12 @@ public final class ArithmeticUtils {
         }
 
         if (n % 2 == 0 || n % 3 == 0) {
-            for (int i = 5; i <= Math.sqrt(n); i = i + 6) {
-                if (n % i == 0 || n % (i + 2) == 0) {
-                    return false;
-                }
+            return false;
+        }
+
+        for (var i = 5; i <= Math.sqrt(n); i = i + 6) {
+            if (n % i == 0 || n % (i + 2) == 0) {
+                return false;
             }
         }
 

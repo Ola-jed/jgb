@@ -7,6 +7,13 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
+/**
+ * Utility class providing algorithms related to Grobner bases.
+ * <p>
+ * This class contains static methods for operations such as reducing and minimizing
+ * a Grobner basis of polynomials
+ * </p>
+ */
 public final class GrobnerBasisAlgorithms {
     private GrobnerBasisAlgorithms() {
     }

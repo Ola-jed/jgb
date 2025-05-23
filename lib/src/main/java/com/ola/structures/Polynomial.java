@@ -7,6 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Represents a polynomial over a polynomial ring {@code T}, consisting of a list of monomials.
+ * <p>
+ * The polynomial maintains a list of monomials sorted according to a specified monomial ordering.
+ * It supports operations respecting the algebraic structure defined by the numeric type {@code T}.
+ * </p>
+ *
+ * @param <T> the field of the coefficients
+ */
 @SuppressWarnings("unchecked")
 public final class Polynomial<T extends Numeric> {
     // Enforce a single implementation of monomials per polynomial ?

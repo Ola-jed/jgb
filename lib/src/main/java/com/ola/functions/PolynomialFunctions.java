@@ -3,6 +3,13 @@ package com.ola.functions;
 import com.ola.number.Numeric;
 import com.ola.structures.Polynomial;
 
+/**
+ * Utility class providing common functions for polynomials.
+ * <p>
+ * This class contains static methods that operate on polynomials,
+ * such as computing S-polynomials.
+ * </p>
+ */
 public final class PolynomialFunctions {
     private PolynomialFunctions() {
     }

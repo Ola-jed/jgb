@@ -5,6 +5,13 @@ import com.ola.structures.DenseMonomial;
 import com.ola.structures.Monomial;
 import com.ola.structures.SparseMonomial;
 
+/**
+ * Utility class providing common functions on monomials.
+ * <p>
+ * This class offers static methods to create special monomials (e.g., the multiplicative identity)
+ * and to compute operations like the least common multiple (LCM) of monomials.
+ * </p>
+ */
 @SuppressWarnings("unchecked")
 public final class MonomialFunctions {
     private MonomialFunctions() {
