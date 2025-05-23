@@ -1,11 +1,11 @@
 package com.ola.dsl.ast;
 
-import com.ola.structures.Monomial;
+import com.ola.dsl.tokens.TokenType;
 
 public class MonomialConfigurationNode extends AstNode {
-    private final Class<? extends Monomial<?>> monomialType;
+    private final TokenType monomialType;
 
-    public MonomialConfigurationNode(Class<? extends Monomial<?>> monomialType) {
+    public MonomialConfigurationNode(TokenType monomialType) {
         this.monomialType = monomialType;
     }
 
@@ -14,7 +14,12 @@ public class MonomialConfigurationNode extends AstNode {
         return visitor.visitMonomialConfigurationNode(this);
     }
 
-    public Class<? extends Monomial<?>> getMonomialType() {
+    public TokenType getMonomialType() {
         return monomialType;
+    }
+
+    @Override
+    public String toString() {
+        return "MonomialConfigurationNode[monomialType=%s]".formatted(monomialType.name());
     }
 }

@@ -1,17 +1,17 @@
 package com.ola.dsl.ast;
 
-import com.ola.number.Numeric;
+import com.ola.dsl.tokens.TokenType;
 
 public class FieldConfigurationNode extends AstNode {
-    private final Class<? extends Numeric> elementsType;
+    private final TokenType elementsType;
     private final int maybeModulo;
 
-    public FieldConfigurationNode(Class<? extends Numeric> elementsType) {
+    public FieldConfigurationNode(TokenType elementsType) {
         this.elementsType = elementsType;
         this.maybeModulo = 0;
     }
 
-    public FieldConfigurationNode(Class<? extends Numeric> elementsType, int maybeModulo) {
+    public FieldConfigurationNode(TokenType elementsType, int maybeModulo) {
         this.elementsType = elementsType;
         this.maybeModulo = maybeModulo;
     }
@@ -21,11 +21,22 @@ public class FieldConfigurationNode extends AstNode {
         return visitor.visitFieldConfigurationNode(this);
     }
 
-    public Class<? extends Numeric> getElementsType() {
+    public TokenType getElementsType() {
         return elementsType;
     }
 
-    public int getMaybeModulo() {
+    public int getModulo() {
         return maybeModulo;
+    }
+
+    @Override
+    public String toString() {
+        var result = "FieldConfigurationNode[elementsType=%s".formatted(elementsType.name());
+        if (elementsType == TokenType.GF) {
+            result += ", Modulo =" + maybeModulo;
+        }
+
+        result += "]";
+        return result;
     }
 }

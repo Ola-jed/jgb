@@ -1,9 +1,11 @@
 package com.ola.dsl.ast;
 
-public class VariablesConfigurationNode extends AstNode {
-    private final String[] variables;
+import java.util.List;
 
-    public VariablesConfigurationNode(String[] variables) {
+public class VariablesConfigurationNode extends AstNode {
+    private final List<String> variables;
+
+    public VariablesConfigurationNode(List<String> variables) {
         this.variables = variables;
     }
 
@@ -12,7 +14,12 @@ public class VariablesConfigurationNode extends AstNode {
         return visitor.visitVariablesConfigurationNode(this);
     }
 
-    public String[] getVariables() {
+    public List<String> getVariables() {
         return variables;
+    }
+
+    @Override
+    public String toString() {
+        return "VariablesConfigurationNode[variables=%s]".formatted(String.join(", ", variables));
     }
 }

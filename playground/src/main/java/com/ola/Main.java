@@ -1,6 +1,8 @@
 package com.ola;
 
+import com.ola.dsl.ast.AstNode;
 import com.ola.dsl.lexer.Lexer;
+import com.ola.dsl.parser.Parser;
 import com.ola.dsl.tokens.Token;
 import com.ola.enums.PairSelectionStrategy;
 import com.ola.functions.GrobnerBasisAlgorithms;
@@ -18,17 +20,24 @@ public class Main {
             var lexer = new Lexer();
             var tokens = lexer.scan("""
                         @variables(x, y, z)
-                    @field(GF[5])
-                    @ordering(grevlex)
-                    @dense;
+                        @ordering(grlex)
+                        @dense
+                        @field(GF[5])
                     
-                    4 + 2z^2 + 3y^2 + 2x^2
-                    4 + 2z^3 + 3y^3 + 2x^3
-                    4 + 2z^4 + 3y^4 + 2x^4
                     """);
 
+            System.out.println("=========================================");
+            System.out.println("Tokens");
             for (Token token : tokens) {
                 System.out.println(token);
+            }
+
+            System.out.println("=========================================");
+            System.out.println("AST");
+            var parser = new Parser(tokens);
+            var ast = parser.parse();
+            for (AstNode astNode : ast) {
+                System.out.println(astNode);
             }
 
             System.exit(0);

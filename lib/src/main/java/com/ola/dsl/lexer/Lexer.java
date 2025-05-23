@@ -87,10 +87,12 @@ public class Lexer {
             do {
                 advance();
             } while (Character.isDigit(peek()));
+            var token = new Token(TokenType.NUMBER, Double.parseDouble(source.substring(start, current)), currentLine);
+            tokens.add(token);
+        } else {
+            var token = new Token(TokenType.NUMBER, Integer.parseInt(source.substring(start, current)), currentLine);
+            tokens.add(token);
         }
-
-        var token = new Token(TokenType.NUMBER, Double.parseDouble(source.substring(start, current)), currentLine);
-        tokens.add(token);
     }
 
     private void indeterminate() {

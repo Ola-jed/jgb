@@ -1,13 +1,12 @@
 package com.ola.dsl.ast;
 
-import com.ola.number.Numeric;
-import com.ola.ordering.MonomialOrdering;
+import com.ola.dsl.tokens.TokenType;
 
 public class OrderingConfigurationNode extends AstNode {
-    private final MonomialOrdering<? extends Numeric> orderingType;
+    private final TokenType tokenType;
 
-    public OrderingConfigurationNode(MonomialOrdering<? extends Numeric> orderingType) {
-        this.orderingType = orderingType;
+    public OrderingConfigurationNode(TokenType tokenType) {
+        this.tokenType = tokenType;
     }
 
     @Override
@@ -15,7 +14,12 @@ public class OrderingConfigurationNode extends AstNode {
         return visitor.visitOrderingConfigurationNode(this);
     }
 
-    public MonomialOrdering<? extends Numeric> getOrderingType() {
-        return orderingType;
+    public TokenType getOrderingType() {
+        return tokenType;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderingConfigurationNode[orderingType=%s]".formatted(tokenType.name());
     }
 }
