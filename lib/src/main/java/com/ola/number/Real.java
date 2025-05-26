@@ -14,6 +14,10 @@ public final class Real implements Numeric {
         this.internal = value;
     }
 
+    public double get() {
+        return internal;
+    }
+
     @Override
     public Numeric add(Numeric other) {
         if (!(other instanceof Real otherReal)) {

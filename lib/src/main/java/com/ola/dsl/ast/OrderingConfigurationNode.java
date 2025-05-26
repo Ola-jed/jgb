@@ -1,12 +1,12 @@
 package com.ola.dsl.ast;
 
-import com.ola.dsl.tokens.TokenType;
+import com.ola.enums.OrderingType;
 
 public class OrderingConfigurationNode extends AstNode {
-    private final TokenType tokenType;
+    private final OrderingType orderingType;
 
-    public OrderingConfigurationNode(TokenType tokenType) {
-        this.tokenType = tokenType;
+    public OrderingConfigurationNode(OrderingType orderingType) {
+        this.orderingType = orderingType;
     }
 
     @Override
@@ -14,12 +14,12 @@ public class OrderingConfigurationNode extends AstNode {
         return visitor.visitOrderingConfigurationNode(this);
     }
 
-    public TokenType getOrderingType() {
-        return tokenType;
+    public OrderingType getOrderingType() {
+        return orderingType;
     }
 
     @Override
     public String toString() {
-        return "OrderingConfigurationNode[orderingType=%s]".formatted(tokenType.name());
+        return "OrderingConfigurationNode[orderingType=%s]".formatted(orderingType.name());
     }
 }

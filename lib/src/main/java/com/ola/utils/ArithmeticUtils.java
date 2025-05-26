@@ -3,7 +3,7 @@ package com.ola.utils;
 /**
  * Utility class providing common arithmetic operations.
  * <p>
- * This class is final and cannot be instantiated. It is intended to group
+ * This class is final is intended to group
  * static utility methods related to arithmetic operations.
  * </p>
  */

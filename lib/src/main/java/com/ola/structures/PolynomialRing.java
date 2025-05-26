@@ -1,5 +1,6 @@
 package com.ola.structures;
 
+import com.ola.enums.MonomialType;
 import com.ola.number.Complex;
 import com.ola.number.Numeric;
 import com.ola.number.Rational;
@@ -43,7 +44,7 @@ public record PolynomialRing(Class<?> numberType, String[] indeterminates) {
         return "%s[%s]".formatted(numberTypeString, String.join(", ", indeterminates));
     }
 
-    public <T extends Numeric> Monomial<T> createMonomial(T coefficient, Map<String, Integer> elements, boolean sparse) {
+    public <T extends Numeric> Monomial<T> createMonomial(T coefficient, Map<String, Integer> elements, MonomialType type) {
         if (!numberType.isAssignableFrom(coefficient.getClass())) {
             throw new IllegalArgumentException(
                     "Coefficient must be of type %s, but got %s"
@@ -56,7 +57,7 @@ public record PolynomialRing(Class<?> numberType, String[] indeterminates) {
             exponents[i] = elements.getOrDefault(indeterminates[i], 0);
         }
 
-        return sparse ? new SparseMonomial<>(exponents, coefficient) : new DenseMonomial<>(exponents, coefficient);
+        return type == MonomialType.SPARSE ? new SparseMonomial<>(exponents, coefficient) : new DenseMonomial<>(exponents, coefficient);
     }
 
     public <T extends Numeric> Polynomial<T> createPolynomial(List<Monomial<T>> monomials, MonomialOrdering<T> ordering) {
@@ -78,10 +79,15 @@ public record PolynomialRing(Class<?> numberType, String[] indeterminates) {
             }
         }
 
-        if (!coefficient.equals("1") && !coefficient.equals("-1") || !hasIndeterminates) {
+        var showCoefficient = !coefficient.equals("1") && !coefficient.equals("-1") || !hasIndeterminates;
+        if (showCoefficient) {
             sb.append(coefficient);
         } else if (coefficient.equals("-1")) {
             sb.append("-");
+        }
+
+        if (hasIndeterminates && showCoefficient) {
+            sb.append("*");
         }
 
         for (var i = 0; i < indeterminates.length; i++) {
@@ -89,8 +95,7 @@ public record PolynomialRing(Class<?> numberType, String[] indeterminates) {
             if (exponent != 0) {
                 sb.append(indeterminates[i]);
                 if (exponent != 1) {
-                    sb.append("^");
-                    sb.append(exponent);
+                    sb.append("^").append(exponent);
                 }
             }
         }

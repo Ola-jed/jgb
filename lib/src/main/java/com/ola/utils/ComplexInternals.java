@@ -16,20 +16,13 @@ public final class ComplexInternals {
         return new ComplexInternals(real, imaginary);
     }
 
-    public double getReal() {
+
+    public double real() {
         return this.real;
     }
 
-    public double real() {
-        return this.getReal();
-    }
-
-    public double getImaginary() {
-        return this.imaginary;
-    }
-
     public double imag() {
-        return this.getImaginary();
+        return this.imaginary;
     }
 
     public ComplexInternals negate() {

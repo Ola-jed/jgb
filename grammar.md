@@ -13,9 +13,9 @@ field            ::= "R" | "Q" | "C" | galois_field
 galois_field     ::= "GF[" integer "]"
 monomial_config  ::= "@dense" | "@sparse"
 
-polynomial       ::= monomial { "+" monomial }
-monomial         ::= [coefficient] factor | coefficient
-factor           ::= symbol ["^" integer] {factor}
+polynomial       ::= monomial { ("+" | "-") monomial}
+monomial         ::= [(coefficient "*")] factor | coefficient
+factor           ::= symbol ["^" integer] { "*" symbol ["^" integer] }
 
 coefficient      ::= real | rational | integer | complex
 real             ::= ["-"] integer ["." integer]
@@ -49,17 +49,17 @@ digit            ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 ### Example
 
 ```
-@variables(x, y, z, t)
-@field(Q)
-@ordering(lex)
+@variables(x, y, z)
+@field(GF[5])
+@ordering(grevlex)
 @dense
 
-2x^2 + y^2 + 2z^2 + 2t^2 + u^2 - u,
-xy + 2yz + 2zt + 2tu - t,
-2xz + 2yt + t^2 + 2zu - z,
-2xt + 2zt + 2yu - y,
-2x + 2y + 2z + 2t + u - 1
+4 + 2 * z^2 + 3 * y^2 + 2 * x^2
+4 + 2 * z^3 + 3 * y^3 + 2 * x^3
+4 + 2 * z^4 + 3 * y^4 + 2 * x^4
 
-# For complex numbers, use I
-# Uppercases cannot be used as fiurst characters in indeterminates to avoid confusion, eg: I and I (I am confused too), but xI is allowed
+# For complex numbers, use 'I' to define the imaginary unit
+# Uppercases cannot be used as first characters in indeterminates
+# It is to avoid confusion with the imaginary unit, eg: I and I (I am confused too)
+# 'xI' for exmaple is allowed as a variable name
 ```

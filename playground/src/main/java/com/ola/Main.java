@@ -1,6 +1,7 @@
 package com.ola;
 
 import com.ola.dsl.ast.AstNode;
+import com.ola.dsl.generator.PolynomialGenerator;
 import com.ola.dsl.lexer.Lexer;
 import com.ola.dsl.parser.Parser;
 import com.ola.dsl.tokens.Token;
@@ -11,19 +12,23 @@ import com.ola.functions.algorithms.F4Algorithm;
 import com.ola.functions.algorithms.ImprovedF4Algorithm;
 import com.ola.functions.algorithms.M4GBAlgorithm;
 import com.ola.number.GaloisFieldElement;
-import com.ola.providers.ReimerGenerator;
 import com.ola.structures.PolynomialRing;
 
 public class Main {
     public static void main(String[] args) {
         try {
+            var ring = new PolynomialRing(GaloisFieldElement.class, new String[]{"x", "y", "z"});
+
             var lexer = new Lexer();
             var tokens = lexer.scan("""
-                        @variables(x, y, z)
-                        @ordering(grlex)
-                        @dense
-                        @field(GF[5])
+                    @variables(x, y, z)
+                    @field(GF[5])
+                    @ordering(grevlex)
+                    @dense
                     
+                    4 + 2 * z^2 + 3 * y^2 + 2 * x^2
+                    4 + 2 * z^3 + 3 * y^3 + 2 * x^3
+                    4 + 2 * z^4 + 3 * y^4 + 2 * x^4
                     """);
 
             System.out.println("=========================================");
@@ -40,13 +45,14 @@ public class Main {
                 System.out.println(astNode);
             }
 
-            System.exit(0);
-
-            var ring = new PolynomialRing(GaloisFieldElement.class, new String[]{"x", "y", "z"});
-            var polynomials = ReimerGenerator.get(3);
-            for (var polynomial : polynomials) {
-                System.out.println(ring.format(polynomial));
+            System.out.println("=========================================");
+            System.out.println("POLYNOMIALS");
+            var generator = new PolynomialGenerator();
+            var polynomials = generator.generate(ast);
+            for (var poly : polynomials) {
+                System.out.println(ring.format(poly));
             }
+
 
             System.out.println("##### The grobner basis (first selection strategy) is");
             var gb = BuchbergerAlgorithm.compute(polynomials, PairSelectionStrategy.FIRST);

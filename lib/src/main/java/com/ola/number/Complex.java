@@ -20,6 +20,14 @@ public final class Complex implements Numeric {
         this.internal = representation;
     }
 
+    public double real() {
+        return internal.real();
+    }
+
+    public double imaginary() {
+        return internal.imag();
+    }
+
     @Override
     public Numeric add(Numeric other) {
         if (!(other instanceof Complex otherComplex)) {

@@ -1,5 +1,6 @@
 package com.ola.number;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
@@ -44,6 +45,12 @@ public final class Rational implements Numeric {
     public Rational(int num) {
         this.num = BigInteger.valueOf(num);
         this.den = BigInteger.ONE;
+    }
+
+    public double get() {
+        return new BigDecimal(num)
+                .divide(new BigDecimal(den), 20, java.math.RoundingMode.HALF_UP)
+                .doubleValue();
     }
 
     private static BigInteger lcm(BigInteger m, BigInteger n) {

@@ -1,11 +1,12 @@
 package com.ola.dsl.ast;
 
-import com.ola.dsl.tokens.TokenType;
+
+import com.ola.enums.MonomialType;
 
 public class MonomialConfigurationNode extends AstNode {
-    private final TokenType monomialType;
+    private final MonomialType monomialType;
 
-    public MonomialConfigurationNode(TokenType monomialType) {
+    public MonomialConfigurationNode(MonomialType monomialType) {
         this.monomialType = monomialType;
     }
 
@@ -14,7 +15,7 @@ public class MonomialConfigurationNode extends AstNode {
         return visitor.visitMonomialConfigurationNode(this);
     }
 
-    public TokenType getMonomialType() {
+    public MonomialType getMonomialType() {
         return monomialType;
     }
 

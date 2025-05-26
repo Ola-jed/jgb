@@ -6,6 +6,11 @@ import com.ola.dsl.tokens.TokenType;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The {@code Lexer} class is responsible for lexical analysis, converting
+ * a raw source string into a list of {@link Token} objects. It identifies
+ * lexical units such as configuration, indeterminates, numbers, and operators.
+ */
 public class Lexer {
     private final List<Token> tokens = new ArrayList<>();
     private int start;
@@ -37,7 +42,7 @@ public class Lexer {
         } else if (TokenType.tokenMapppings.containsKey(character)) {
             addToken(TokenType.tokenMapppings.get(character), String.valueOf(character));
         } else if (character == '\n') {
-            addToken(TokenType.LINE_BREAK, null);
+            addToken(TokenType.LINE_BREAK, "\\n");
             currentLine++;
         } else if (Character.isWhitespace(character)) {
             // Nothing to do
@@ -48,7 +53,7 @@ public class Lexer {
             // Use dense representation for monomials
             return;
         } else if (matchKeyword("sparse", TokenType.SPARSE)) {
-            // Use dense representation for monomials
+            // Use sparse representation for monomials
             return;
         } else if (matchKeyword("GF", TokenType.GF)) {
             // Galois Field
@@ -139,7 +144,7 @@ public class Lexer {
         return current >= source.length();
     }
 
-    private boolean matchKeyword(String keyword, TokenType type) {
+    private boolean  matchKeyword(String keyword, TokenType type) {
         var suffix = keyword.substring(1);
         if (source.startsWith(suffix, current)) {
             var end = current + suffix.length();

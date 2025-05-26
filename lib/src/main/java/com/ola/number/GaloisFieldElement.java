@@ -10,6 +10,7 @@ import com.ola.utils.ArithmeticUtils;
  */
 public final class GaloisFieldElement implements Numeric {
     private final int primeModulus;
+
     private final int element;
 
     public GaloisFieldElement(int element, int primeModulus) {
@@ -21,6 +22,13 @@ public final class GaloisFieldElement implements Numeric {
         this.element = (element % primeModulus + primeModulus) % primeModulus;
     }
 
+    public int get() {
+        return element;
+    }
+
+    public int modulo() {
+        return primeModulus;
+    }
 
     @Override
     public Numeric add(Numeric other) {

@@ -24,22 +24,50 @@ public class PolynomialNode extends AstNode {
 
     @Override
     public String toString() {
-        var sb = new StringBuilder("PolynomialNode[monomials=<");
-        for (int i = 0; i < monomials.size(); i++) {
+        var sb = new StringBuilder("PolynomialNode[");
+        for (var i = 0; i < monomials.size(); i++) {
             var monomial = monomials.get(i);
             var coefficient = monomial.first();
             var variables = monomial.second();
+            var monomialString = new StringBuilder();
 
-            sb.append("[coefficient=")
-                    .append(coefficient.toString())
-                    .append(", variables=")
-                    .append(variables.toString())
-                    .append("]");
+            // Handle coefficient formatting
+            boolean hasVariables = !variables.isEmpty();
+            String coefficientString = coefficient.toString();
+            if (coefficientString.endsWith(".0")) {
+                coefficientString = coefficientString.substring(0, coefficientString.length() - 2);
+            }
+
+            var showCoefficient = !coefficientString.equals("1") || !hasVariables;
+            if (showCoefficient) {
+                monomialString.append(coefficientString);
+            }
+
+            if (hasVariables) {
+                if (showCoefficient) {
+                    monomialString.append(" * ");
+                }
+
+                var count = 0;
+                for (var entry : variables.entrySet()) {
+                    if (count++ > 0) {
+                        monomialString.append(" * ");
+                    }
+
+                    monomialString.append(entry.getKey());
+                    if (entry.getValue() != 1) {
+                        monomialString.append("^").append(entry.getValue());
+                    }
+                }
+            }
+
+            sb.append(monomialString);
             if (i < monomials.size() - 1) {
                 sb.append(", ");
             }
         }
-        sb.append(">]");
+        sb.append("]");
         return sb.toString();
     }
+
 }
