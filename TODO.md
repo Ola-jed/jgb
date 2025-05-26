@@ -1,4 +1,3 @@
-- Parsing of files
 - F5 / F5B
 - G2V
 - GVW
