@@ -5,6 +5,7 @@ import com.ola.dsl.tokens.TokenType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The {@code Lexer} class is responsible for lexical analysis, converting
@@ -16,14 +17,17 @@ public class Lexer {
     private int start;
     private int current;
     private int currentLine;
-    private String source;
+    private char[] sourceChars;
+    private int sourceLength;
 
     public List<Token> scan(String source) {
-        this.source = source;
+        sourceChars = source.toCharArray();
+        sourceLength = sourceChars.length;
         tokens.clear();
         currentLine = 1;
         start = 0;
         current = 0;
+
         while (!isAtEnd()) {
             start = current;
             scanToken();
@@ -34,141 +38,88 @@ public class Lexer {
     }
 
     private void scanToken() {
-        var character = advance();
+        char character = advance();
 
-        if (character == '#') {
-            // Comment, we can just skip the whole line
-            skipLine();
-        } else if (TokenType.tokenMapppings.containsKey(character)) {
-            addToken(TokenType.tokenMapppings.get(character), String.valueOf(character));
-        } else if (character == '\n') {
-            addToken(TokenType.LINE_BREAK, "\\n");
-            currentLine++;
-        } else if (Character.isWhitespace(character)) {
-            // Nothing to do
-            return;
-        } else if (Character.isDigit(character)) {
-            number();
-        } else if (matchKeyword("dense", TokenType.DENSE)) {
-            // Use dense representation for monomials
-            return;
-        } else if (matchKeyword("sparse", TokenType.SPARSE)) {
-            // Use sparse representation for monomials
-            return;
-        } else if (matchKeyword("GF", TokenType.GF)) {
-            // Galois Field
-            return;
-        } else if (matchKeyword("lex", TokenType.LEX)) {
-            // Lexical ordering
-            return;
-        } else if (matchKeyword("grlex", TokenType.GRLEX)) {
-            // Graded lexical ordering
-            return;
-        } else if (matchKeyword("grevlex", TokenType.GREVLEX)) {
-            // Graded reverse lexical ordering
-            return;
-        } else if (matchKeyword("variables", TokenType.VARIABLES_DEFINITION)) {
-            // @variables
-            return;
-        } else if (matchKeyword("field", TokenType.FIELD_DEFINITION)) {
-            // @field
-            return;
-        } else if (matchKeyword("ordering", TokenType.ORDERING_DEFINITION)) {
-            // @ordering
-            return;
-        } else if ((Character.isLowerCase(character) && Character.isLetter(character)) || character == '_') {
-            indeterminate();
-        } else {
-            throw new IllegalArgumentException("Unexpected character '%s' on line %d".formatted(character, currentLine));
+        switch (character) {
+            case '#': // Comment, skip the whole line
+                skipLine();
+                break;
+            case '\n':
+                addToken(TokenType.LINE_BREAK, "\\n");
+                currentLine++;
+                break;
+            default:
+                if (TokenType.tokenMappings.containsKey(character)) {
+                    // Cache the string to avoid repeated String.valueOf calls
+                    addToken(TokenType.tokenMappings.get(character), String.valueOf(character));
+                } else if (Character.isWhitespace(character)) {
+                    // Skip whitespace - no action needed
+                } else if (Character.isDigit(character)) {
+                    number();
+                } else if (Character.isLetter(character) || character == '_') {
+                    // Handle both keywords and indeterminates in one method
+                    identifierOrKeyword();
+                } else {
+                    throw new IllegalArgumentException("Unexpected character '%s' on line %d".formatted(character, currentLine));
+                }
+
+                break;
         }
     }
 
     private void number() {
-        while (Character.isDigit(peek())) {
-            advance();
+        // Consume all digits
+        while (current < sourceLength && Character.isDigit(sourceChars[current])) {
+            current++;
         }
 
-        if (peek() == '.' && Character.isDigit(peekNext())) {
-            do {
-                advance();
-            } while (Character.isDigit(peek()));
-            var token = new Token(TokenType.NUMBER, Double.parseDouble(source.substring(start, current)), currentLine);
-            tokens.add(token);
+        // Checking for decimal point
+        if (current < sourceLength && sourceChars[current] == '.' && current + 1 < sourceLength && Character.isDigit(sourceChars[current + 1])) {
+            current++; // consume '.'
+            while (current < sourceLength && Character.isDigit(sourceChars[current])) {
+                current++;
+            }
+
+            // Parse as double
+            var numberStr = new String(sourceChars, start, current - start);
+            tokens.add(new Token(TokenType.NUMBER, Double.parseDouble(numberStr), currentLine));
         } else {
-            var token = new Token(TokenType.NUMBER, Integer.parseInt(source.substring(start, current)), currentLine);
-            tokens.add(token);
+            // Parse as integer
+            var numberStr = new String(sourceChars, start, current - start);
+            tokens.add(new Token(TokenType.NUMBER, Integer.parseInt(numberStr), currentLine));
         }
     }
 
-    private void indeterminate() {
-        while (isValidIndeterminateCharacter(peek())) {
-            advance();
+    private void identifierOrKeyword() {
+        // Consume all valid identifier characters
+        while (current < sourceLength && isValidIdentifierCharacter(sourceChars[current])) {
+            current++;
         }
 
-        var text = source.substring(start, current);
-        addToken(TokenType.INDETERMINATE, text);
+        var text = new String(sourceChars, start, current - start);
+        var keywordType = TokenType.keywords.get(text);
+        addToken(Objects.requireNonNullElse(keywordType, TokenType.INDETERMINATE), text);
     }
 
     private char advance() {
-        skip(1);
-        return source.charAt(current - 1);
-    }
-
-    private void skip(int count) {
-        current += count;
+        return sourceChars[current++];
     }
 
     private void skipLine() {
-        while (!isAtEnd() && peek() != '\n') {
-            skip(1);
+        while (current < sourceLength && sourceChars[current] != '\n') {
+            current++;
         }
-    }
-
-    private char peek() {
-        if (isAtEnd()) {
-            return '\0';
-        }
-
-        return source.charAt(current);
-    }
-
-    private char peekNext() {
-        if (current + 1 >= source.length()) {
-            return '\0';
-        }
-
-        return source.charAt(current + 1);
     }
 
     private boolean isAtEnd() {
-        return current >= source.length();
-    }
-
-    private boolean  matchKeyword(String keyword, TokenType type) {
-        var suffix = keyword.substring(1);
-        if (source.startsWith(suffix, current)) {
-            var end = current + suffix.length();
-            // Check that the next character (if any) is NOT a valid identifier char
-            if (end < source.length()) {
-                var nextChar = source.charAt(end);
-                if (Character.isLetterOrDigit(nextChar) || nextChar == '_') {
-                    return false;
-                }
-            }
-
-            skip(suffix.length());
-            addToken(type, keyword);
-            return true;
-        }
-
-        return false;
+        return current >= sourceLength;
     }
 
     private void addToken(TokenType type, String lexeme) {
         tokens.add(new Token(type, lexeme, currentLine));
     }
 
-    private boolean isValidIndeterminateCharacter(char c) {
-        return Character.isLetter(c) || Character.isDigit(c) || c == '_';
+    private boolean isValidIdentifierCharacter(char c) {
+        return Character.isLetterOrDigit(c) || c == '_';
     }
 }

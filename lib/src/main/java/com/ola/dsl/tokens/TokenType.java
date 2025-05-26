@@ -33,7 +33,7 @@ public enum TokenType {
     COMMA,
     EOF;
 
-    public static final Map<Character, TokenType> tokenMapppings = Map.ofEntries(
+    public static final Map<Character, TokenType> tokenMappings = Map.ofEntries(
             Map.entry('+', PLUS),
             Map.entry('-', MINUS),
             Map.entry('/', DIVIDE),
@@ -50,5 +50,17 @@ public enum TokenType {
             Map.entry('C', C),
             Map.entry('Q', Q),
             Map.entry(',', COMMA)
+    );
+
+    public static final Map<String, TokenType> keywords = Map.of(
+            "dense", TokenType.DENSE,
+            "sparse", TokenType.SPARSE,
+            "GF", TokenType.GF,
+            "lex", TokenType.LEX,
+            "grlex", TokenType.GRLEX,
+            "grevlex", TokenType.GREVLEX,
+            "variables", TokenType.VARIABLES_DEFINITION,
+            "field", TokenType.FIELD_DEFINITION,
+            "ordering", TokenType.ORDERING_DEFINITION
     );
 }

@@ -18,7 +18,6 @@ public class Main {
     public static void main(String[] args) {
         try {
             var ring = new PolynomialRing(GaloisFieldElement.class, new String[]{"x", "y", "z"});
-
             var lexer = new Lexer();
             var tokens = lexer.scan("""
                     @variables(x, y, z)
