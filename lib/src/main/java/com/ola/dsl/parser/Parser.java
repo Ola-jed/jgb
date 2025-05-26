@@ -151,7 +151,7 @@ public class Parser {
 
         if (peekType(TokenType.LEFT_PARENTHESIS) || peekType(TokenType.NUMBER) || peekType(TokenType.I)) {
             // There is indeed a coefficient
-            var coefficient = coefficient();
+            var coefficient = coefficient(peekType(TokenType.LEFT_PARENTHESIS));
             if (match(TokenType.TIMES)) {
                 var factors = factors();
                 return new Pair<>(coefficient, factors);
@@ -173,9 +173,9 @@ public class Parser {
         }
     }
 
-    private Numeric coefficient() {
+    private Numeric coefficient(boolean inGroup) {
         if (match(TokenType.LEFT_PARENTHESIS)) {
-            var content = coefficient();
+            var content = coefficient(inGroup);
             consume(TokenType.RIGHT_PARENTHESIS, "Expected ')' after grouping.");
             return content;
         }
@@ -189,7 +189,7 @@ public class Parser {
         // R and GF have single-token elements
         // If we encounter a '/', we consider we are in Q
         // If we encounter a 'I', we consider we are in C, and then we look for another coefficient
-        // if we get a + or a -, we continue looking, we are in C
+        // If we are in a ground and if we get a + or a -, we continue looking, we are in C
         // We read the first number
         var number = consume(TokenType.NUMBER, "Expected number.").value();
         var first = ((Number) number).doubleValue();
@@ -200,7 +200,7 @@ public class Parser {
             return new Rational(BigInteger.valueOf(numerator), BigInteger.valueOf(denominator.intValue()));
         } else if (match(TokenType.I)) {
             return new Complex(0, first);
-        } else if (peekType(TokenType.PLUS)) {
+        } else if (inGroup && peekType(TokenType.PLUS)) {
             // We check if this can be expressed as (x + yI) or (x + I)
             if (!peekType(TokenType.I, 1) && !(peekType(TokenType.NUMBER, 1) && peekType(TokenType.I, 2))) {
                 return new Real(first);
@@ -215,7 +215,7 @@ public class Parser {
             var imaginaryPart = (Number) consume(TokenType.NUMBER, "Expected number after '+'.").value();
             consume(TokenType.I, "Expected 'I' after imaginary part.");
             return new Complex(first, imaginaryPart.doubleValue());
-        } else if (peekType(TokenType.MINUS)) {
+        } else if (inGroup && peekType(TokenType.MINUS)) {
             // We check if this can be expressed as (x - yI) or (x - I)
             if (!peekType(TokenType.I, 1) && !(peekType(TokenType.NUMBER, 1) && peekType(TokenType.I, 2))) {
                 return new Real(first);

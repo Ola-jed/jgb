@@ -15,6 +15,7 @@ import com.ola.structures.PolynomialRing;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 public class PolynomialGenerator implements AstNode.Visitor<Void> {
     private NumericType numericType = NumericType.Real;
@@ -91,14 +92,29 @@ public class PolynomialGenerator implements AstNode.Visitor<Void> {
     @Override
     public Void visitPolynomialNode(PolynomialNode node) {
         var monomials = new ArrayList<Monomial<Numeric>>();
+        Numeric constantSum = null;
         for (var monomial : node.getMonomials()) {
             var coefficient = NumericUtils.tryAssign(monomial.first(), numericType, modulo);
-            monomials.add(ring.createMonomial(coefficient, monomial.second(), monomialType));
+            if (monomial.second().isEmpty()) {
+                if (constantSum == null) {
+                    constantSum = coefficient;
+                } else {
+                    constantSum = constantSum.add(coefficient);
+                }
+            } else {
+                monomials.add(ring.createMonomial(coefficient, monomial.second(), monomialType));
+            }
+        }
+
+        // If there was any constant term, add it at the end
+        if (constantSum != null) {
+            monomials.add(ring.createMonomial(constantSum, Map.of(), monomialType));
         }
 
         polynomials.add(ring.createPolynomial(monomials, ordering));
         return null;
     }
+
 
     private void buildRing(List<AstNode> nodes) {
         if (variables.length == 0) {

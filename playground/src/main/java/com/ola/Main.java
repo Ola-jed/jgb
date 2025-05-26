@@ -11,13 +11,13 @@ import com.ola.functions.algorithms.BuchbergerAlgorithm;
 import com.ola.functions.algorithms.F4Algorithm;
 import com.ola.functions.algorithms.ImprovedF4Algorithm;
 import com.ola.functions.algorithms.M4GBAlgorithm;
-import com.ola.number.GaloisFieldElement;
+import com.ola.number.Complex;
 import com.ola.structures.PolynomialRing;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            var ring = new PolynomialRing(GaloisFieldElement.class, new String[]{"x", "y", "z"});
+            var ring = new PolynomialRing(Complex.class, new String[]{"x", "y", "z"});
             var lexer = new Lexer();
             var tokens = lexer.scan("""
                     @variables(x, y, z)
