@@ -26,10 +26,11 @@ public final class Polynomial<T extends Numeric> {
 
     public Polynomial(List<Monomial<T>> monomials, int fieldSize, MonomialOrdering<T> ordering) {
         monomials.sort(ordering);
-
         // Merge monomials with equal exponents
         List<Monomial<T>> merged = new ArrayList<>();
+        var maxDegree = 0;
         for (var monomial : monomials) {
+            maxDegree = Math.max(maxDegree, monomial.degree());
             if (!merged.isEmpty() && monomial.exponentsEqual(merged.getLast())) {
                 Monomial<T> last = merged.removeLast();
                 T newCoefficient = (T) last.coefficient().add(monomial.coefficient());
@@ -48,17 +49,9 @@ public final class Polynomial<T extends Numeric> {
         }
 
         this.monomials = cleaned;
-
-
-        this.monomials.sort(ordering);
         this.fieldSize = fieldSize;
         this.ordering = ordering;
-        this.length = monomials.size();
-        var maxDegree = 0;
-        for (var monomial : monomials) {
-            maxDegree = Math.max(maxDegree, monomial.degree());
-        }
-
+        this.length = cleaned.size();
         this.degree = maxDegree;
     }
 

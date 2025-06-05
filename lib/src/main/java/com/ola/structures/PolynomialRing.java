@@ -1,12 +1,14 @@
 package com.ola.structures;
 
+import com.ola.dsl.generator.PolynomialGenerator;
+import com.ola.dsl.lexer.Lexer;
+import com.ola.dsl.parser.Parser;
 import com.ola.enums.MonomialType;
-import com.ola.number.Complex;
-import com.ola.number.Numeric;
-import com.ola.number.Rational;
-import com.ola.number.Real;
+import com.ola.number.*;
 import com.ola.ordering.MonomialOrdering;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +52,13 @@ public record PolynomialRing(Class<?> numberType, String[] indeterminates) {
                     "Coefficient must be of type %s, but got %s"
                             .formatted(numberType.getSimpleName(), coefficient.getClass().getSimpleName())
             );
+        }
+
+        var indeterminateSet = new HashSet<>(Arrays.asList(indeterminates));
+        for (var key : elements.keySet()) {
+            if (!indeterminateSet.contains(key)) {
+                throw new IllegalArgumentException("Unknown indeterminate: " + key);
+            }
         }
 
         var exponents = new int[indeterminates.length];
@@ -110,7 +119,7 @@ public record PolynomialRing(Class<?> numberType, String[] indeterminates) {
     }
 
     public <T extends Numeric> String format(Polynomial<T> polynomial) {
-        if(polynomial.monomials().isEmpty()) {
+        if (polynomial.monomials().isEmpty()) {
             return "0";
         }
 
@@ -134,4 +143,39 @@ public record PolynomialRing(Class<?> numberType, String[] indeterminates) {
 
         return sb.toString();
     }
+
+    public <T extends Numeric> Polynomial<T> parse(String polynomial) {
+        return parse(polynomial, 2);
+    }
+
+    public <T extends Numeric> Polynomial<T> parse(String polynomial, int modulo) {
+        var context = new StringBuilder()
+                .append("@variables(")
+                .append(String.join(",", indeterminates))
+                .append(")\n");
+        if (GaloisFieldElement.class.isAssignableFrom(numberType)) {
+            context.append("@field(GF[").append(modulo).append("])\n");
+        } else if (Rational.class.isAssignableFrom(numberType)) {
+            context.append("@field(Q)\n");
+        } else if (Real.class.isAssignableFrom(numberType)) {
+            context.append("@field(R)\n");
+        } else if (Complex.class.isAssignableFrom(numberType)) {
+            context.append("@field(C)\n");
+        } else {
+            throw new IllegalArgumentException("Unsupported number type: " + numberType.getName());
+        }
+
+        context.append(polynomial);
+
+        var parsed = new Parser(new Lexer().scan(context.toString())).parse();
+        var polynomials = new PolynomialGenerator().generate(parsed);
+        if (polynomials.isEmpty()) {
+            throw new IllegalArgumentException("No polynomials could be parsed from input.");
+        }
+
+        @SuppressWarnings("unchecked")
+        var result = (Polynomial<T>) polynomials.getFirst();
+        return result;
+    }
+
 }
