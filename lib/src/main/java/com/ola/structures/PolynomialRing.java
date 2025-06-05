@@ -67,19 +67,20 @@ public record PolynomialRing(Class<?> numberType, String[] indeterminates) {
     public <T extends Numeric> String format(Monomial<T> monomial) {
         var sb = new StringBuilder();
         var coefficient = monomial.coefficient().toString();
+
         if (coefficient.endsWith(".0")) {
             coefficient = coefficient.substring(0, coefficient.length() - 2);
         }
 
         var hasIndeterminates = false;
-        for (var i = 0; i < indeterminates.length; i++) {
+        for (int i = 0; i < indeterminates.length; i++) {
             if (monomial.getExponent(i) != 0) {
                 hasIndeterminates = true;
                 break;
             }
         }
 
-        var showCoefficient = !coefficient.equals("1") && !coefficient.equals("-1") || !hasIndeterminates;
+        boolean showCoefficient = !coefficient.equals("1") && !coefficient.equals("-1") || !hasIndeterminates;
         if (showCoefficient) {
             sb.append(coefficient);
         } else if (coefficient.equals("-1")) {
@@ -90,13 +91,18 @@ public record PolynomialRing(Class<?> numberType, String[] indeterminates) {
             sb.append("*");
         }
 
-        for (var i = 0; i < indeterminates.length; i++) {
-            var exponent = monomial.getExponent(i);
+        boolean firstVar = true;
+        for (int i = 0; i < indeterminates.length; i++) {
+            int exponent = monomial.getExponent(i);
             if (exponent != 0) {
+                if (!firstVar) {
+                    sb.append("*");
+                }
                 sb.append(indeterminates[i]);
                 if (exponent != 1) {
                     sb.append("^").append(exponent);
                 }
+                firstVar = false;
             }
         }
 

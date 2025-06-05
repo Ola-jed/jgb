@@ -2,7 +2,9 @@ package com.ola.structures;
 
 import com.ola.number.Numeric;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.IntBinaryOperator;
 
@@ -213,6 +215,26 @@ public final class SparseMonomial<T extends Numeric> extends Monomial<T> {
         }
 
         return degree != 0;
+    }
+
+    @Override
+    public boolean exponentsEqual(Monomial<T> other) {
+        if (!(other instanceof SparseMonomial<T> sparse)) {
+            throw new IllegalArgumentException("Expected a SparseMonomial instance.");
+        }
+
+        var ptr = 0;
+        for (var i = 0; i < fieldSize; i++) {
+            if (bitset.get(i)) {
+                if (exponents[ptr] != sparse.exponents[ptr]) {
+                    return false;
+                }
+
+                ptr++;
+            }
+        }
+
+        return true;
     }
 
     @Override

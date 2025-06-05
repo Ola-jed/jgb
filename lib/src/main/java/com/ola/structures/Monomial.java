@@ -36,4 +36,14 @@ public abstract sealed class Monomial<T extends Numeric> permits DenseMonomial, 
     public abstract Iterable<Monomial<T>> divisors();
 
     public abstract boolean disjointWith(Monomial<T> other);
+
+    public abstract boolean exponentsEqual(Monomial<T> other);
+
+    public boolean isZero() {
+        return coefficient().equals(coefficient().zero());
+    }
+
+    public boolean isOne() {
+        return coefficient().equals(coefficient().one()) && degree() == 0;
+    }
 }

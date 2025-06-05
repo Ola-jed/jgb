@@ -18,7 +18,6 @@ import java.util.Objects;
  */
 @SuppressWarnings("unchecked")
 public final class Polynomial<T extends Numeric> {
-    // Enforce a single implementation of monomials per polynomial ?
     private final List<Monomial<T>> monomials;
     private final int fieldSize;
     private final MonomialOrdering<T> ordering;
@@ -26,7 +25,31 @@ public final class Polynomial<T extends Numeric> {
     private final int degree;
 
     public Polynomial(List<Monomial<T>> monomials, int fieldSize, MonomialOrdering<T> ordering) {
-        this.monomials = new ArrayList<>(monomials);
+        monomials.sort(ordering);
+
+        // Merge monomials with equal exponents
+        List<Monomial<T>> merged = new ArrayList<>();
+        for (var monomial : monomials) {
+            if (!merged.isEmpty() && monomial.exponentsEqual(merged.getLast())) {
+                Monomial<T> last = merged.removeLast();
+                T newCoefficient = (T) last.coefficient().add(monomial.coefficient());
+                merged.add(last.withCoefficient(newCoefficient));
+            } else {
+                merged.add(monomial);
+            }
+        }
+
+        // Remove zero coefficient monomials
+        List<Monomial<T>> cleaned = new ArrayList<>();
+        for (var monomial : merged) {
+            if (!monomial.isZero()) {
+                cleaned.add(monomial);
+            }
+        }
+
+        this.monomials = cleaned;
+
+
         this.monomials.sort(ordering);
         this.fieldSize = fieldSize;
         this.ordering = ordering;
@@ -333,7 +356,6 @@ public final class Polynomial<T extends Numeric> {
         return remainder;
     }
 
-    // Nice function to copy the polynomial and removing the leading term (used for reduction)
     public Polynomial<T> tail() {
         var monomialsToKeep = new ArrayList<>(monomials.subList(0, monomials.size() - 1));
         return new Polynomial<>(monomialsToKeep, fieldSize, ordering, length - 1);
@@ -363,5 +385,19 @@ public final class Polynomial<T extends Numeric> {
     @Override
     public int hashCode() {
         return Objects.hash(monomials, fieldSize, ordering);
+    }
+
+    public boolean isOne() {
+        return monomials.size() == 1 && monomials.getFirst().isOne();
+    }
+
+    public boolean isZero() {
+        for (var monomial : monomials) {
+            if (!monomial.isZero()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

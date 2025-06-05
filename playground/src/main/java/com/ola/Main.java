@@ -13,16 +13,27 @@ import com.ola.functions.algorithms.ImprovedF4Algorithm;
 import com.ola.functions.algorithms.M4GBAlgorithm;
 import com.ola.graphs.GraphColoringProblem;
 import com.ola.number.Complex;
+import com.ola.number.GaloisFieldElement;
+import com.ola.providers.KatsuraGenerator;
+import com.ola.structures.Polynomial;
 import com.ola.structures.PolynomialRing;
 
 public class Main {
     public static void main(String[] args) {
         try {
+            var x = new PolynomialRing(GaloisFieldElement.class, new String[]{"x1", "x2", "x3", "x4", "x5", "x6", "x7"});
+            var xx = KatsuraGenerator.get(6);
+            for (Polynomial<GaloisFieldElement> xxx : xx) {
+                System.out.println(x.format(xxx));
+            }
+
+
+            System.exit(0);
+
             var r = new PolynomialRing(Complex.class, new String[]{"a", "b", "c", "d", "e"});
             var w = new GraphColoringProblem("C:\\Users\\olabi\\Projects\\IdeaProjects\\jgb\\examples\\graphs\\simple");
 
             System.out.println(w.isKColorable(3));
-            System.exit(0);
 
 
             var ring = new PolynomialRing(Complex.class, new String[]{"x", "y", "z"});

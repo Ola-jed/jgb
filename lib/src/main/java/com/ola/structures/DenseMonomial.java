@@ -126,12 +126,27 @@ public final class DenseMonomial<T extends Numeric> extends Monomial<T> {
         }
 
         for (var i = 0; i < fieldSize; i++) {
-            if(exponents[i] != 0 && dense.exponents[i] != 0) {
+            if (exponents[i] != 0 && dense.exponents[i] != 0) {
                 return false;
             }
         }
 
         return degree != 0;
+    }
+
+    @Override
+    public boolean exponentsEqual(Monomial<T> other) {
+        if (!(other instanceof DenseMonomial<T> dense)) {
+            throw new IllegalArgumentException("Expected a DenseMonomial instance.");
+        }
+
+        for (int i = 0; i < fieldSize; i++) {
+            if (exponents[i] != dense.exponents[i]) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override

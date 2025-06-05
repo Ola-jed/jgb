@@ -3,9 +3,7 @@ package com.ola.functions;
 import com.ola.enums.PairSelectionStrategy;
 import com.ola.functions.algorithms.BuchbergerAlgorithm;
 import com.ola.number.GaloisFieldElement;
-import com.ola.providers.Katsura3Generator;
-import com.ola.providers.Katsura4Generator;
-import com.ola.providers.Katsura5Generator;
+import com.ola.providers.KatsuraGenerator;
 import com.ola.providers.ReimerGenerator;
 import com.ola.structures.Polynomial;
 import org.openjdk.jmh.annotations.*;
@@ -35,9 +33,9 @@ public class BuchbergerAlgorithmBenchmarks {
             case "reimer3" -> ReimerGenerator.get(3, dense);
             case "reimer4" -> ReimerGenerator.get(4, dense);
             case "reimer5" -> ReimerGenerator.get(5, dense);
-            case "katsura3" -> Katsura3Generator.get(dense);
-            case "katsura4" -> Katsura4Generator.get(dense);
-            case "katsura5" -> Katsura5Generator.get(dense);
+            case "katsura3" -> KatsuraGenerator.get(3, dense);
+            case "katsura4" -> KatsuraGenerator.get(4, dense);
+            case "katsura5" -> KatsuraGenerator.get(5, dense);
             default -> throw new IllegalStateException("Unexpected value: " + system);
         };
     }
