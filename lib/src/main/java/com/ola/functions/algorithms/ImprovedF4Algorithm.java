@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+// FIXME, issues with katsura 4
 @SuppressWarnings("unchecked")
 public final class ImprovedF4Algorithm {
     private ImprovedF4Algorithm() {
