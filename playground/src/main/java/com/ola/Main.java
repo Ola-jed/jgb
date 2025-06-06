@@ -13,8 +13,8 @@ import com.ola.structures.PolynomialRing;
 public class Main {
     public static void main(String[] args) {
         try {
-            var ring = new PolynomialRing(GaloisFieldElement.class, new String[]{"x1", "x2", "x3", "x4", "x5"});
-            var polynomials = KatsuraGenerator.get(4);
+            var ring = new PolynomialRing(GaloisFieldElement.class, new String[]{"x1", "x2", "x3", "x4"});
+            var polynomials = KatsuraGenerator.get(3);
             for (var poly : polynomials) {
                 System.out.println(ring.format(poly));
             }

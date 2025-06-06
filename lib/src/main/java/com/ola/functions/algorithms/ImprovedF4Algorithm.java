@@ -187,7 +187,6 @@ public final class ImprovedF4Algorithm {
             List<Pair<Polynomial<T>, Polynomial<T>>> oldPairs,
             Polynomial<T> polynomial
     ) {
-        var zero = (T) polynomial.leadingCoefficient().zero();
         var pairs = new ArrayList<Pair<Polynomial<T>, Polynomial<T>>>();
         var polynomialLm = polynomial.leadingMonomial();
         for (var p : oldBasis) {
@@ -207,14 +206,12 @@ public final class ImprovedF4Algorithm {
             var predicateForPairs = pairs.stream().allMatch(x -> MonomialFunctions
                     .lcm(polynomialLm, lm)
                     .divide(MonomialFunctions.lcm(polynomialLm, x.second().leadingMonomial()))
-                    .coefficient()
-                    .equals(zero));
+                    .isZero());
 
             var predicateForSavedPairs = savedPairs.stream().allMatch(x -> MonomialFunctions
                     .lcm(polynomialLm, lm)
                     .divide(MonomialFunctions.lcm(polynomialLm, x.second().leadingMonomial()))
-                    .coefficient()
-                    .equals(zero));
+                    .isZero());
 
 
             if (predicateForPairs && predicateForSavedPairs) {
@@ -239,8 +236,7 @@ public final class ImprovedF4Algorithm {
             var lm2 = selectedPair.second().leadingMonomial();
             var lcm = MonomialFunctions.lcm(lm1, lm2);
 
-            if (lcm.divide(polynomialLm).coefficient().equals(zero)
-                    || MonomialFunctions.lcm(polynomialLm, lm1).equals(lcm)
+            if (lcm.divide(polynomialLm).isZero() || MonomialFunctions.lcm(polynomialLm, lm1).equals(lcm)
                     || MonomialFunctions.lcm(polynomialLm, lm2).equals(lcm)
             ) {
                 newPairs.add(selectedPair);
@@ -251,7 +247,7 @@ public final class ImprovedF4Algorithm {
         var newBasis = new ArrayList<Polynomial<T>>();
         while (!oldBasis.isEmpty()) {
             var candidate = oldBasis.removeLast();
-            if (candidate.leadingMonomial().divide(polynomialLm).coefficient().equals(zero)) {
+            if (candidate.leadingMonomial().divide(polynomialLm).isZero()) {
                 newBasis.add(candidate);
             }
         }

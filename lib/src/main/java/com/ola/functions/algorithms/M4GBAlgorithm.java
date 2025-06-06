@@ -83,8 +83,6 @@ public final class M4GBAlgorithm {
     ) {
         var leadingCoefficient = polynomial.leadingCoefficient();
         var leadingMonomial = polynomial.leadingMonomial();
-        var zero = (T) leadingCoefficient.zero();
-        var one = (T) leadingCoefficient.one();
         var ordering = polynomial.ordering();
 
         var currentPolynomials = new ArrayList<Polynomial<T>>();
@@ -103,7 +101,7 @@ public final class M4GBAlgorithm {
             Monomial<T> selectedMonomial = null;
             for (var monomial : allMonomials) {
                 var divisionResult = monomial.divide(leadingMonomial);
-                if (!divisionResult.coefficient().equals(zero)) {
+                if (!divisionResult.isZero()) {
                     if (selectedMonomial == null || ordering.compare(monomial, selectedMonomial) > 0) {
                         selectedMonomial = monomial;
                     }
@@ -141,11 +139,12 @@ public final class M4GBAlgorithm {
             assert minPolynomial != null;
 
             // Update H
+            var zero = (T) leadingCoefficient.zero();
             for (var i = 0; i < currentPolynomials.size(); i++) {
                 var g = currentPolynomials.get(i);
                 var coefficient = zero;
                 for (var monomial : g.tail().monomials()) {
-                    if (monomial.withCoefficient(one).equals(minPolynomial.leadingMonomial())) {
+                    if (monomial.exponentsEqual(minPolynomial.leadingMonomial())) {
                         coefficient = monomial.coefficient();
                         break;
                     }
@@ -159,7 +158,7 @@ public final class M4GBAlgorithm {
                 var g = polynomials.get(i);
                 var coefficient = zero;
                 for (var monomial : g.tail().monomials()) {
-                    if (monomial.withCoefficient(one).equals(minPolynomial.leadingMonomial())) {
+                    if (monomial.exponentsEqual(minPolynomial.leadingMonomial())) {
                         coefficient = monomial.coefficient();
                         break;
                     }
@@ -206,9 +205,8 @@ public final class M4GBAlgorithm {
             List<Polynomial<T>> polynomials,
             Monomial<T> term
     ) {
-        var normalizedTerm = term.withCoefficient((T) term.coefficient().one());
         for (var polynomial : polynomials) {
-            if (polynomial.leadingMonomial().equals(normalizedTerm)) {
+            if (polynomial.leadingMonomial().exponentsEqual(term)) {
                 return new Pair<>(polynomials, polynomial);
             }
         }
@@ -222,10 +220,8 @@ public final class M4GBAlgorithm {
     }
 
     private static <T extends Numeric> boolean monomialReducibleByMonomials(List<Monomial<T>> monomials, Monomial<T> monomial) {
-        var zero = monomial.coefficient().zero();
         for (var maybeDivisor : monomials) {
-            var divisionResultCoefficient = monomial.divide(maybeDivisor).coefficient();
-            if (!divisionResultCoefficient.equals(zero)) {
+            if (!monomial.divide(maybeDivisor).isZero()) {
                 return true;
             }
         }
@@ -234,10 +230,8 @@ public final class M4GBAlgorithm {
     }
 
     private static <T extends Numeric> Optional<Polynomial<T>> reduceSel(List<Polynomial<T>> basis, Monomial<T> monomial) {
-        var zero = monomial.coefficient().zero();
         for (var polynomial : basis) {
-            var divisionResultCoefficient = monomial.divide(polynomial.leadingMonomial()).coefficient();
-            if (!divisionResultCoefficient.equals(zero)) {
+            if (!monomial.divide(polynomial.leadingMonomial()).isZero()) {
                 return Optional.of(polynomial);
             }
         }
@@ -246,12 +240,12 @@ public final class M4GBAlgorithm {
     }
 
     private static <T extends Numeric> Set<Monomial<T>> monomialsInTails(List<Polynomial<T>> polynomials) {
-        var monomials = new HashSet<Monomial<T>>();
         T one = null;
         if (!polynomials.isEmpty()) {
             one = (T) polynomials.getFirst().leadingCoefficient().one();
         }
 
+        var monomials = new HashSet<Monomial<T>>();
         for (var polynomial : polynomials) {
             for (var monomial : polynomial.tail().monomials()) {
                 monomials.add(monomial.withCoefficient(one));
@@ -267,7 +261,6 @@ public final class M4GBAlgorithm {
             List<Pair<Monomial<T>, Monomial<T>>> oldPairs,
             Monomial<T> monomial
     ) {
-        var zero = (T) monomial.coefficient().zero();
         var pairs = new ArrayList<Pair<Monomial<T>, Monomial<T>>>(monomials.size());
         for (var p : monomials) {
             pairs.add(new Pair<>(monomial, p));
@@ -284,14 +277,12 @@ public final class M4GBAlgorithm {
             var predicateForPairs = pairs.stream().allMatch(x -> MonomialFunctions
                     .lcm(monomial, selectedPair.second())
                     .divide(MonomialFunctions.lcm(monomial, x.second()))
-                    .coefficient()
-                    .equals(zero));
+                    .isZero());
 
             var predicateForSavedPairs = savedPairs.stream().allMatch(x -> MonomialFunctions
                     .lcm(monomial, selectedPair.second())
                     .divide(MonomialFunctions.lcm(monomial, x.second()))
-                    .coefficient()
-                    .equals(zero));
+                    .isZero());
 
 
             if (predicateForPairs && predicateForSavedPairs) {
@@ -313,8 +304,7 @@ public final class M4GBAlgorithm {
             var x = selectedPair.first();
             var y = selectedPair.second();
             var lcm = MonomialFunctions.lcm(x, y);
-            if (lcm.divide(monomial).coefficient().equals(zero)
-                    || MonomialFunctions.lcm(x, monomial).equals(lcm)
+            if (lcm.divide(monomial).isZero() || MonomialFunctions.lcm(x, monomial).equals(lcm)
                     || MonomialFunctions.lcm(monomial, y).equals(lcm)
             ) {
                 newPairs.add(selectedPair);
@@ -325,7 +315,7 @@ public final class M4GBAlgorithm {
         var newMonomials = new ArrayList<Monomial<T>>(monomials.size());
         while (!monomials.isEmpty()) {
             var candidate = monomials.removeLast();
-            if (candidate.divide(monomial).coefficient().equals(zero)) {
+            if (candidate.divide(monomial).isZero()) {
                 newMonomials.add(candidate);
             }
         }

@@ -150,6 +150,16 @@ public final class DenseMonomial<T extends Numeric> extends Monomial<T> {
     }
 
     @Override
+    public boolean isZero() {
+        return coefficient.equals(coefficient.zero());
+    }
+
+    @Override
+    public boolean isOne() {
+        return degree == 0 && coefficient.equals(coefficient.one());
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;

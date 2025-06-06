@@ -22,7 +22,7 @@ public class M4GBAlgorithmBenchmarks {
     @Param({"dense", "sparse"})
     private String monomialType;
 
-    @Param({"reimer3", "reimer4", "katsura3", "katsura4", "katsura5"})
+    @Param({"reimer3", "reimer4", "reimer5", "reimer6", "katsura3", "katsura4", "katsura5", "katsura6"})
     private String system;
 
     @Setup
@@ -32,9 +32,11 @@ public class M4GBAlgorithmBenchmarks {
             case "reimer3" -> ReimerGenerator.get(3, dense);
             case "reimer4" -> ReimerGenerator.get(4, dense);
             case "reimer5" -> ReimerGenerator.get(5, dense);
+            case "reimer6" -> ReimerGenerator.get(6, dense);
             case "katsura3" -> KatsuraGenerator.get(3, dense);
             case "katsura4" -> KatsuraGenerator.get(4, dense);
             case "katsura5" -> KatsuraGenerator.get(5, dense);
+            case "katsura6" -> KatsuraGenerator.get(6, dense);
             default -> throw new IllegalStateException("Unexpected value: " + system);
         };
     }

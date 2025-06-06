@@ -83,7 +83,6 @@ public final class F4Algorithm {
             List<Polynomial<T>> currentBasis
     ) {
         var one = (T) currentBasis.getFirst().leadingCoefficient().one();
-        var zero = (T) currentBasis.getFirst().leadingCoefficient().zero();
         var list = sPolynomialsHalves(pairs);
         var done = new HashSet<Monomial<T>>();
         var allMonomials = new HashSet<Monomial<T>>();
@@ -110,7 +109,7 @@ public final class F4Algorithm {
             done.add(largestMonomial);
             for (var polynomial : currentBasis) {
                 var divisionResult = largestMonomial.divide(polynomial.leadingMonomial());
-                if (!divisionResult.coefficient().equals(zero)) {
+                if (!divisionResult.isZero()) {
                     var polynomialToAdd = polynomial.multiply(divisionResult);
                     list.add(polynomialToAdd);
 
