@@ -223,6 +223,10 @@ public final class SparseMonomial<T extends Numeric> extends Monomial<T> {
             throw new IllegalArgumentException("Expected a SparseMonomial instance.");
         }
 
+        if (!bitset.equals(sparse.bitset)) {
+            return false;
+        }
+
         var ptr = 0;
         for (var i = 0; i < fieldSize; i++) {
             if (bitset.get(i)) {
