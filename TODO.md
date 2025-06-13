@@ -1,6 +1,3 @@
-- Add isZero, isOne to monomials and polynomials
-- Add parsing for single polynomials on ring class
+- FGLM algorithm implementation
 - A mini web application for testing
 - F5 / F5B
-- G2V
-- GVW

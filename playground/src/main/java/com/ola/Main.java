@@ -6,6 +6,7 @@ import com.ola.functions.algorithms.BuchbergerAlgorithm;
 import com.ola.functions.algorithms.F4Algorithm;
 import com.ola.functions.algorithms.ImprovedF4Algorithm;
 import com.ola.functions.algorithms.M4GBAlgorithm;
+import com.ola.graphs.GraphColoringProblem;
 import com.ola.number.GaloisFieldElement;
 import com.ola.providers.KatsuraGenerator;
 import com.ola.structures.PolynomialRing;
@@ -13,6 +14,8 @@ import com.ola.structures.PolynomialRing;
 public class Main {
     public static void main(String[] args) {
         try {
+            var wp = new GraphColoringProblem("");
+
             var ring = new PolynomialRing(GaloisFieldElement.class, new String[]{"x1", "x2", "x3", "x4"});
             var polynomials = KatsuraGenerator.get(3);
             for (var poly : polynomials) {
