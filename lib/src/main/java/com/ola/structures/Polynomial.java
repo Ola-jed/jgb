@@ -72,7 +72,7 @@ public final class Polynomial<T extends Numeric> {
         this.degree = 0;
     }
 
-    // Constructor to avoid sorting when initializing after doing some operations because the monomials are already sorted
+    // Constructors to avoid sorting when initializing after doing some operations because the monomials are already sorted
     private Polynomial(List<Monomial<T>> monomials, int fieldSize, MonomialOrdering<T> ordering, int length) {
         this.monomials = monomials;
         this.fieldSize = fieldSize;
@@ -84,6 +84,14 @@ public final class Polynomial<T extends Numeric> {
         }
 
         this.degree = maxDegree;
+    }
+
+    private Polynomial(List<Monomial<T>> monomials, int fieldSize, MonomialOrdering<T> ordering, int length, int degree) {
+        this.monomials = monomials;
+        this.fieldSize = fieldSize;
+        this.ordering = ordering;
+        this.length = length;
+        this.degree = degree;
     }
 
     @Override
@@ -332,8 +340,7 @@ public final class Polynomial<T extends Numeric> {
             for (var candidatePolynomial : polynomials) {
                 var candidateLeadingTerm = candidatePolynomial.leadingTerm();
                 var divisionResult = leadingTerm.divide(candidateLeadingTerm);
-
-                if (!divisionResult.coefficient().equals(divisionResult.coefficient().zero())) {
+                if (!divisionResult.isZero()) {
                     polynomial = polynomial.subtract(candidatePolynomial.multiply(divisionResult));
                     divided = true;
                     break;
@@ -393,5 +400,11 @@ public final class Polynomial<T extends Numeric> {
         }
 
         return true;
+    }
+
+    public Polynomial<T> changeOrdering(MonomialOrdering<T> newOrdering) {
+        var monomialsCopy = new ArrayList<>(monomials);
+        monomialsCopy.sort(newOrdering);
+        return new Polynomial<>(monomialsCopy, fieldSize, newOrdering, length, degree);
     }
 }

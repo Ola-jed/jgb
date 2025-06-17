@@ -23,6 +23,7 @@ import java.util.Map;
  * @param indeterminates An array of strings representing the names of the indeterminates
  *                       (e.g., "x", "y", "z") used in the polynomials within the ring.
  */
+@SuppressWarnings("unchecked")
 public record PolynomialRing(Class<?> numberType, String[] indeterminates) {
     public PolynomialRing {
         if (!Numeric.class.isAssignableFrom(numberType)) {
@@ -46,6 +47,31 @@ public record PolynomialRing(Class<?> numberType, String[] indeterminates) {
         return "%s[%s]".formatted(numberTypeString, String.join(", ", indeterminates));
     }
 
+    public PolynomialRing contract(int toKeep) {
+        if (toKeep < 0 || toKeep > indeterminates.length) {
+            throw new IllegalArgumentException("Invalid number of indeterminates to keep : " + toKeep);
+        }
+
+        var newIndeterminates = new String[toKeep];
+        System.arraycopy(indeterminates, 0, newIndeterminates, 0, toKeep);
+        return new PolynomialRing(numberType, newIndeterminates);
+    }
+
+    public PolynomialRing extend(String[] extraIndeterminates) {
+        var newIndeterminates = new String[indeterminates.length + extraIndeterminates.length];
+        System.arraycopy(indeterminates, 0, newIndeterminates, 0, indeterminates.length);
+        System.arraycopy(extraIndeterminates, 0, newIndeterminates, indeterminates.length, extraIndeterminates.length);
+        return new PolynomialRing(numberType, newIndeterminates);
+    }
+
+    public <T extends Numeric> PolynomialRing typeChange(Class<T> newNumberType) {
+        if (!Numeric.class.isAssignableFrom(newNumberType)) {
+            throw new IllegalArgumentException("newNumberType must be a subclass of Numeric");
+        }
+
+        return new PolynomialRing(newNumberType, indeterminates);
+    }
+
     public <T extends Numeric> Monomial<T> createMonomial(T coefficient, Map<String, Integer> elements, MonomialType type) {
         if (!numberType.isAssignableFrom(coefficient.getClass())) {
             throw new IllegalArgumentException(
@@ -67,6 +93,36 @@ public record PolynomialRing(Class<?> numberType, String[] indeterminates) {
         }
 
         return type == MonomialType.SPARSE ? new SparseMonomial<>(exponents, coefficient) : new DenseMonomial<>(exponents, coefficient);
+    }
+
+    public <T extends Numeric> Polynomial<T> zero(MonomialOrdering<T> ordering) {
+        return new Polynomial<>(indeterminates.length, ordering);
+    }
+
+    public <T extends Numeric> Polynomial<T> one(MonomialOrdering<T> ordering, MonomialType monomialType) {
+        return one(ordering, monomialType, 2);
+    }
+
+    public <T extends Numeric> Polynomial<T> one(MonomialOrdering<T> ordering, MonomialType monomialType, int modulo) {
+        var exponents = new int[indeterminates.length];
+        T coefficient;
+        if (numberType == Complex.class) {
+            coefficient = (T) new Complex(1, 0);
+        } else if (numberType == Rational.class) {
+            coefficient = (T) new Rational(1);
+        } else if (numberType == Real.class) {
+            coefficient = (T) new Real(1.0);
+        } else if (numberType == GaloisFieldElement.class) {
+            coefficient = (T) new GaloisFieldElement(1, modulo);
+        } else {
+            throw new IllegalArgumentException("Unsupported number type : " + numberType.getName());
+        }
+
+        if (monomialType == MonomialType.DENSE) {
+            return new Polynomial<>(new DenseMonomial<>(exponents, coefficient), ordering);
+        } else {
+            return new Polynomial<>(new SparseMonomial<>(exponents, coefficient), ordering);
+        }
     }
 
     public <T extends Numeric> Polynomial<T> createPolynomial(List<Monomial<T>> monomials, MonomialOrdering<T> ordering) {
@@ -93,7 +149,7 @@ public record PolynomialRing(Class<?> numberType, String[] indeterminates) {
         if (showCoefficient) {
             sb.append(coefficient);
         } else if (coefficient.equals("-1")) {
-            sb.append("-");
+            sb.append("- ");
         }
 
         if (hasIndeterminates && showCoefficient) {
@@ -133,11 +189,12 @@ public record PolynomialRing(Class<?> numberType, String[] indeterminates) {
                 first = false;
             } else {
                 if (formattedMonomial.startsWith("-")) {
-                    sb.append(" ");
+                    sb.append(" - ");
+                    sb.append(formattedMonomial.substring(1)); // skip the minus
                 } else {
                     sb.append(" + ");
+                    sb.append(formattedMonomial);
                 }
-                sb.append(formattedMonomial);
             }
         }
 
@@ -177,5 +234,4 @@ public record PolynomialRing(Class<?> numberType, String[] indeterminates) {
         var result = (Polynomial<T>) polynomials.getFirst();
         return result;
     }
-
 }

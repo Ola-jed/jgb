@@ -242,6 +242,47 @@ public final class SparseMonomial<T extends Numeric> extends Monomial<T> {
     }
 
     @Override
+    public boolean isPowerOf(Monomial<T> other) {
+        if (!(other instanceof SparseMonomial<T> sparse)) {
+            throw new IllegalArgumentException("Expected a SparseMonomial instance.");
+        }
+
+        if (isZero() || sparse.isZero()) {
+            return false;
+        }
+
+        if (!bitset.equals(sparse.bitset)) {
+            return false;
+        }
+
+        Integer ratio = null;
+        for (var i = 0; i < exponents.length; i++) {
+            var a = exponents[i];
+            var b = sparse.exponents[i];
+            if (b == 0) {
+                if (a != 0) {
+                    return false;
+                }
+
+                continue;
+            }
+
+            if (a % b != 0) {
+                return false;
+            }
+
+            var currentRatio = a / b;
+            if (ratio == null) {
+                ratio = currentRatio;
+            } else if (ratio != currentRatio) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
     public boolean isZero() {
         return coefficient.equals(coefficient.zero());
     }
@@ -276,13 +317,9 @@ public final class SparseMonomial<T extends Numeric> extends Monomial<T> {
         }
 
         var ptr = 0;
-        for (var i = 0; i < fieldSize; i++) {
-            if (bitset.get(i)) {
-                if (exponents[ptr] != other.exponents[ptr]) {
-                    return false;
-                }
-
-                ptr++;
+        for (var i = 0; i < exponents.length; i++) {
+            if (exponents[ptr] != other.exponents[ptr]) {
+                return false;
             }
         }
 

@@ -39,6 +39,8 @@ public abstract sealed class Monomial<T extends Numeric> permits DenseMonomial, 
 
     public abstract boolean exponentsEqual(Monomial<T> other);
 
+    public abstract boolean isPowerOf(Monomial<T> other);
+
     public abstract boolean isZero();
 
     public abstract boolean isOne();

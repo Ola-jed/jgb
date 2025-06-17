@@ -150,6 +150,43 @@ public final class DenseMonomial<T extends Numeric> extends Monomial<T> {
     }
 
     @Override
+    public boolean isPowerOf(Monomial<T> other) {
+        if (!(other instanceof DenseMonomial<T> dense)) {
+            throw new IllegalArgumentException("Expected a DenseMonomial instance.");
+        }
+
+        if (isZero() || dense.isZero()) {
+            return false;
+        }
+
+        Integer ratio = null;
+        for (var i = 0; i < fieldSize; i++) {
+            var a = exponents[i];
+            var b = dense.exponents[i];
+            if (b == 0) {
+                if (a != 0) {
+                    return false;
+                }
+
+                continue;
+            }
+
+            if (a % b != 0) {
+                return false;
+            }
+
+            var currentRatio = a / b;
+            if (ratio == null) {
+                ratio = currentRatio;
+            } else if (ratio != currentRatio) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
     public boolean isZero() {
         return coefficient.equals(coefficient.zero());
     }
