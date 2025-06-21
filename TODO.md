@@ -1,3 +1,2 @@
-- FGLM algorithm implementation
 - A mini web application for testing
 - F5 / F5B
