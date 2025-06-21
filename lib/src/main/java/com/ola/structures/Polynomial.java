@@ -57,11 +57,19 @@ public final class Polynomial<T extends Numeric> {
     }
 
     public Polynomial(Monomial<T> monomial, MonomialOrdering<T> ordering) {
-        this.monomials = List.of(monomial);
-        this.fieldSize = monomial.fieldSize();
-        this.ordering = ordering;
-        this.length = 1;
-        this.degree = monomial.degree();
+        if(monomial.isZero()) {
+            this.monomials = List.of();
+            this.fieldSize = monomial.fieldSize();
+            this.ordering = ordering;
+            this.length = 0;
+            this.degree = 0;
+        } else {
+            this.monomials = List.of(monomial);
+            this.fieldSize = monomial.fieldSize();
+            this.ordering = ordering;
+            this.length = 1;
+            this.degree = monomial.degree();
+        }
     }
 
     public Polynomial(int fieldSize, MonomialOrdering<T> ordering) {

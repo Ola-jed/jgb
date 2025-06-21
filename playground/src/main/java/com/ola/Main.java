@@ -4,7 +4,7 @@ import com.ola.functions.algorithms.FGLMAlgorithm;
 import com.ola.number.Rational;
 import com.ola.structures.PolynomialRing;
 
-import java.util.List;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,11 +16,7 @@ public class Main {
             var p4 = ring.parse("5 * x^2 - 4 * y + 2 * z - 1");
 
 
-            var gb = List.of(p1, p2, p3, p4);
-            System.out.println("Original gb using grevlex");
-            for (var polynomial : gb) {
-                System.out.println(ring.format(polynomial));
-            }
+            var gb = Arrays.asList(p1, p2, p3, p4);
             System.out.println("-------------------------------------------------");
 
             var lexGb = FGLMAlgorithm.compute(gb);

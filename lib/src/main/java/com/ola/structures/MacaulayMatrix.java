@@ -2,7 +2,6 @@ package com.ola.structures;
 
 import com.ola.number.Numeric;
 import com.ola.ordering.MonomialOrdering;
-import com.ola.utils.Pair;
 
 import java.util.*;
 
@@ -184,29 +183,5 @@ public final class MacaulayMatrix<T extends Numeric> {
         }
 
         return polynomials;
-    }
-
-    /**
-     * Precondition : The matrix should be in row echelon form
-     *
-     * @param polynomial the polynomial we want to check the matrix against
-     */
-    public Pair<Boolean, Map<Monomial<T>, T>> solveLinearDependency(Polynomial<T> polynomial) {
-        var multipliers = Collections.nCopies(coefficients.size(), (T) null);
-        var monomialIndex = 0;
-        for (var column = 0; column < monomials.size(); column++) {
-            // For each column, find if possible the index where there is a 1 and other elements are zeroes
-            var oneIndex = -1;
-            var zeroesCount = 0;
-
-            for (int line = 0; line < coefficients.size(); line++) {
-
-            }
-
-        }
-
-        return null;
-
-
     }
 }
