@@ -172,12 +172,8 @@ public final class FGLMAlgorithm {
         }
 
         for (var monomial : sortedMonomials) {
-            var coefficient = coefficientMap.get(monomial);
-            if (coefficient == null) {
-                polynomialCoefficients.add(zero);
-            } else {
-                polynomialCoefficients.add(coefficient);
-            }
+            var coefficient = coefficientMap.getOrDefault(monomial, zero);
+            polynomialCoefficients.add(coefficient);
         }
 
         var solver = new MatrixSolver<>(matrix, polynomialCoefficients);
@@ -197,10 +193,10 @@ public final class FGLMAlgorithm {
     }
 
     private static <T extends Numeric> Monomial<T> monomial(int[] exponents, MonomialType type, T one) {
-        if (type == MonomialType.DENSE) {
-            return new DenseMonomial<>(exponents, one);
-        } else {
-            return new SparseMonomial<>(exponents, one);
-        }
+        return switch (type) {
+            case DENSE -> new DenseMonomial<>(exponents, one);
+            case SPARSE -> new SparseMonomial<>(exponents, one);
+            case null -> throw new IllegalArgumentException("MonomialType cannot be null");
+        };
     }
 }

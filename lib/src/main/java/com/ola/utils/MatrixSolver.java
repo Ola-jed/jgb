@@ -12,7 +12,7 @@ import java.util.List;
  * @param <T>
  */
 @SuppressWarnings("unchecked")
-public class MatrixSolver<T extends Numeric> {
+public final class MatrixSolver<T extends Numeric> {
     private final List<List<T>> matrix;
     private final List<T> values;
     private final T zero;

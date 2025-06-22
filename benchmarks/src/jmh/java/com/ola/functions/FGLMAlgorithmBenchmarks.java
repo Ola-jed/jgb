@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@OutputTimeUnit(TimeUnit.MICROSECONDS)
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)
 @Measurement(iterations = 3, time = 1, timeUnit = TimeUnit.SECONDS)
