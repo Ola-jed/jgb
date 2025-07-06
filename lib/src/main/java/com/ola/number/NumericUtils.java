@@ -46,7 +46,7 @@ public final class NumericUtils {
         } else if (to == NumericType.Rational) {
             return switch (from) {
                 case GaloisFieldElement x -> new Rational(x.get());
-                case Rational x -> from;
+                case Rational ignored -> from;
                 case Real x -> {
                     if (x.get() % 1 == 0) {
                         yield new Rational((int) x.get());

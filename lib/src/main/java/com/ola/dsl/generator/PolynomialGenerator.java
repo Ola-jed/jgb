@@ -17,6 +17,27 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * AST visitor that transforms a list of {@link AstNode} instances into
+ * {@link Polynomial} objects defined over a configurable {@link PolynomialRing}.
+ *
+ * <p>Supports field selection ({@code Real}, {@code Complex}, {@code Rational}, {@code GaloisField}),
+ * monomial representation (dense/sparse), variable declaration, and monomial orderings
+ * (lexicographic, graded lexicographic, graded reverse lexicographic).</p>
+ *
+ * <p>Configuration nodes are visited first to initialize the polynomial ring.
+ * If no variable list is explicitly declared, variables are inferred from the polynomials.</p>
+ *
+ * <h3>Usage</h3>
+ * <pre>{@code
+ * PolynomialGenerator generator = new PolynomialGenerator();
+ * List<Polynomial<Numeric>> polys = generator.generate(ast);
+ * }</pre>
+ *
+ * @see AstNode
+ * @see Polynomial
+ * @see PolynomialRing
+ */
 public class PolynomialGenerator implements AstNode.Visitor<Void> {
     private NumericType numericType = NumericType.Real;
     private int modulo;
@@ -26,6 +47,20 @@ public class PolynomialGenerator implements AstNode.Visitor<Void> {
     private MonomialType monomialType = MonomialType.DENSE;
     private MonomialOrdering<Numeric> ordering = new GrevlexOrdering<>();
 
+    /**
+     * Converts a list of AST nodes into a list of {@link Polynomial} instances.
+     *
+     * <p>The method processes the input in two passes:
+     * <ol>
+     *   <li>Visits all non-polynomial configuration nodes to set up the numeric field,
+     *       variables, monomial type, and ordering.</li>
+     *   <li>Builds the polynomial ring, inferring variables if none were declared.</li>
+     *   <li>Visits all polynomial nodes to generate fully-typed {@link Polynomial} objects.</li>
+     * </ol>
+     *
+     * @param ast the list of AST nodes representing polynomial expressions and configuration
+     * @return list of {@link Polynomial} objects created from the AST
+     */
     public List<Polynomial<Numeric>> generate(List<AstNode> ast) {
         variables = new String[0];
         polynomials = new ArrayList<>();

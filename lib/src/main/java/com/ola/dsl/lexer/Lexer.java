@@ -20,6 +20,16 @@ public class Lexer {
     private char[] sourceChars;
     private int sourceLength;
 
+    /**
+     * Scans the input source string and returns a list of tokens.
+     * <p>
+     * Iteratively processes characters until the end of input is reached.
+     * Adds an EOF token at the end to signal the end of input stream.
+     * </p>
+     *
+     * @param source raw source code string to tokenize
+     * @return list of {@link Token} objects representing lexical units
+     */
     public List<Token> scan(String source) {
         sourceChars = source.toCharArray();
         sourceLength = sourceChars.length;

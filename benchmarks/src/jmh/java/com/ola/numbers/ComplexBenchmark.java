@@ -1,7 +1,7 @@
 package com.ola.numbers;
 
-import com.ola.number.Numeric;
 import com.ola.number.Complex;
+import com.ola.number.Numeric;
 import org.openjdk.jmh.annotations.*;
 
 import java.util.concurrent.TimeUnit;

@@ -6,6 +6,11 @@ import com.ola.structures.SparseMonomial;
 
 import java.io.IOException;
 
+/**
+ * Represents a graph coloring problem defined by an input graph.
+ *
+ * <p>The graph is loaded from a file in DIMACS format.</p>
+ */
 public class GraphColoringProblem {
     private final Graph graph;
 

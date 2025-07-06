@@ -2,6 +2,15 @@ package com.ola.dsl.tokens;
 
 import java.util.Map;
 
+/**
+ * Enumeration of token types recognized by the lexer.
+ *
+ * <p>Includes basic operators, numeric and variable tokens, configuration keywords,
+ * and delimiters used in the polynomial DSL.</p>
+ *
+ * <p>Provides static mappings from characters and keywords to corresponding token types
+ * to facilitate token recognition during lexical analysis.</p>
+ */
 public enum TokenType {
     R,
     C,
@@ -33,6 +42,9 @@ public enum TokenType {
     COMMA,
     EOF;
 
+    /**
+     * Maps single characters to their corresponding {@link TokenType}.
+     */
     public static final Map<Character, TokenType> tokenMappings = Map.ofEntries(
             Map.entry('+', PLUS),
             Map.entry('-', MINUS),
@@ -52,6 +64,9 @@ public enum TokenType {
             Map.entry(',', COMMA)
     );
 
+    /**
+     * Maps reserved keyword strings to their corresponding {@link TokenType}.
+     */
     public static final Map<String, TokenType> keywords = Map.of(
             "dense", TokenType.DENSE,
             "sparse", TokenType.SPARSE,

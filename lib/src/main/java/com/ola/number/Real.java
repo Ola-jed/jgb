@@ -65,6 +65,10 @@ public final class Real implements Numeric {
 
     @Override
     public Numeric inverse() {
+        if (internal == 0.) {
+            throw new ArithmeticException("Division by zero");
+        }
+
         return new Real(1 / internal);
     }
 

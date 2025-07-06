@@ -13,7 +13,6 @@ import com.ola.number.Rational;
 import com.ola.number.Real;
 import com.ola.utils.Pair;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +31,13 @@ public class Parser {
         current = 0;
     }
 
+    /**
+     * Parses the token list into a list of {@link AstNode} instances.
+     *
+     * <p>Processes the token stream line by line, skipping empty lines.</p>
+     *
+     * @return list of AST nodes representing parsed polynomial blocks and configurations
+     */
     public List<AstNode> parse() {
         var nodes = new ArrayList<AstNode>();
         skipLineBreaks();
@@ -195,9 +201,9 @@ public class Parser {
         var first = ((Number) number).doubleValue();
         if (match(TokenType.DIVIDE)) {
             // A rational number, we try to get the denominator
-            var numerator = (long) first;
+            var numerator = (int) first;
             var denominator = (Number) consume(TokenType.NUMBER, "Expected number after '/'.").value();
-            return new Rational(BigInteger.valueOf(numerator), BigInteger.valueOf(denominator.intValue()));
+            return new Rational(numerator, denominator.intValue());
         } else if (match(TokenType.I)) {
             return new Complex(0, first);
         } else if (inGroup && peekType(TokenType.PLUS)) {

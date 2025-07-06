@@ -1,8 +1,11 @@
 package com.ola.enums;
 
 /**
- * Strategies for selecting critical pairs during the Buchberger algorithm
- * for computing Gröbner bases.
+ * Enumeration of strategies for selecting critical pairs during
+ * the Buchberger algorithm for computing Gröbner bases.
+ *
+ * <p>These strategies influence the order and efficiency of the
+ * basis computation.</p>
  */
 public enum PairSelectionStrategy {
     FIRST,
