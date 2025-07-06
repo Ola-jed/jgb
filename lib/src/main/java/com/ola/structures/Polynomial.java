@@ -299,11 +299,16 @@ public final class Polynomial<T extends Numeric> {
             return new Polynomial<>(new ArrayList<>(), fieldSize, ordering, 0);
         }
 
+        // Handle the 1 - monomial
+        if(factor.isOne()) {
+            return this;
+        }
+
         var resultMonomials = new ArrayList<Monomial<T>>(length);
         for (int i = 0; i < length; i++) {
             var monomial = monomials.get(i);
             var resultingMonomial = monomial.multiply(factor);
-            if (!resultingMonomial.coefficient().equals(resultingMonomial.coefficient().zero())) {
+            if (!resultingMonomial.isZero()) {
                 resultMonomials.add(resultingMonomial);
             }
         }

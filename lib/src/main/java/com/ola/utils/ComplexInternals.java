@@ -16,7 +16,6 @@ public final class ComplexInternals {
         return new ComplexInternals(real, imaginary);
     }
 
-
     public double real() {
         return this.real;
     }
