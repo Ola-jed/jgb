@@ -268,7 +268,7 @@ public final class M4GBAlgorithm {
 
         var savedPairs = new ArrayList<Pair<Monomial<T>, Monomial<T>>>();
         while (!pairs.isEmpty()) {
-            var selectedPair = pairs.removeFirst();
+            var selectedPair = pairs.removeLast();
             if (monomial.disjointWith(selectedPair.second())) {
                 savedPairs.add(selectedPair);
                 continue;
@@ -284,7 +284,6 @@ public final class M4GBAlgorithm {
                     .divide(MonomialFunctions.lcm(monomial, x.second()))
                     .isZero());
 
-
             if (predicateForPairs && predicateForSavedPairs) {
                 savedPairs.add(selectedPair);
             }
@@ -292,7 +291,7 @@ public final class M4GBAlgorithm {
 
         var otherPairs = new ArrayList<Pair<Monomial<T>, Monomial<T>>>();
         while (!savedPairs.isEmpty()) {
-            var selectedPair = savedPairs.removeFirst();
+            var selectedPair = savedPairs.removeLast();
             if (!monomial.disjointWith(selectedPair.second())) {
                 otherPairs.add(selectedPair);
             }
@@ -300,7 +299,7 @@ public final class M4GBAlgorithm {
 
         var newPairs = new ArrayList<Pair<Monomial<T>, Monomial<T>>>();
         while (!oldPairs.isEmpty()) {
-            var selectedPair = oldPairs.removeFirst();
+            var selectedPair = oldPairs.removeLast();
             var x = selectedPair.first();
             var y = selectedPair.second();
             var lcm = MonomialFunctions.lcm(x, y);
