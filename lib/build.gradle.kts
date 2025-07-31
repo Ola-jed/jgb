@@ -1,6 +1,7 @@
 plugins {
     id("java")
     `java-library`
+    `maven-publish`
 }
 
 group = "com.ola"
@@ -32,4 +33,12 @@ tasks.jar {
 
 java {
     withSourcesJar()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
 }
