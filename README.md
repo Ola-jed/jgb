@@ -26,6 +26,7 @@ polynomial ring operations, and polynomial generation tools.
     * Improved F4 Algorithm
     * M4GB Algorithm
 * Basis reduction support
+* Ordering change with FGLM
 * Monomial orderings:
     * Lexicographic
     * Graded Lexicographic
