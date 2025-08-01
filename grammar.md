@@ -61,5 +61,5 @@ digit            ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 # For complex numbers, use 'I' to define the imaginary unit
 # Uppercases cannot be used as first characters in indeterminates
 # It is to avoid confusion with the imaginary unit, eg: I and I (I am confused too)
-# 'xI' for exmaple is allowed as a variable name
+# 'xI' for example is allowed as a variable name
 ```
