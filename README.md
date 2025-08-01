@@ -1,6 +1,4 @@
 # jgb: Java Gröbner Basis Computation Library
-[![Release](https://jitpack.io/v/Ola-jed/jgb.svg)](https://jitpack.io/#Ola-jed/jgb)
-
 
 **jgb** is a Java-based symbolic algebra library focused on polynomial computation.
 It includes several algorithms for computing Gröbner bases, various monomial orderings,
@@ -12,9 +10,35 @@ polynomial ring operations, and polynomial generation tools.
 - Java 21 or later
 - No external dependencies (pure Java)
 ---
+
+## Installing
+
+### Maven
+
+Add the following dependency to your `pom.xml`:
+
+```xml
+<dependency>
+  <groupId>io.github.ola-jed.jgb</groupId>
+  <artifactId>lib</artifactId>
+  <version>0.0.1</version>
+</dependency>
+```
+### Gradle
+Add the following to your build.gradle dependencies :
+
+````groovy
+implementation 'io.github.ola-jed.jgb:lib:0.0.1'
+````
+Or for the Kotlin DSL (build.gradle.kts):
+
+````kotlin
+implementation("io.github.ola-jed.jgb:lib:0.0.1")
+````
+---
 ## Features
 
-* Polynomial rings over different Fields
+* Polynomial rings over different fields
   * Galois Fields
   * Rationals
   * Reals

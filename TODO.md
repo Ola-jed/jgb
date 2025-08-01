@@ -1,2 +1,3 @@
-- A mini web application for testing
-- F5 / F5B
+- F5 / F5B algorithm
+- G2V algorithm
+- Finalize unit test suite
