@@ -1,5 +1,6 @@
 jdk:
   - openjdk21
-
 install:
   - ./gradlew :lib:clean :lib:build
+artifacts:
+  - lib/build/libs/*.jar
