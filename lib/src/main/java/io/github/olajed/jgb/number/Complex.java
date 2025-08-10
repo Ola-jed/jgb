@@ -6,11 +6,8 @@ package io.github.olajed.jgb.number;
  * <p>Implements the {@link Numeric} interface for numeric operations.</p>
  *
  * <p>Provides common constants: {@code I} (imaginary unit), {@code one}, and {@code zero}.</p>
- *
- * @param real      the real part of the complex number
- * @param imaginary the imaginary part of the complex number
  */
-public record Complex(double real, double imaginary) implements Numeric {
+public final class Complex implements Numeric {
     /**
      * The imaginary unit {@code i}, equal to {@code 0 + 1i}.
      */
@@ -26,6 +23,14 @@ public record Complex(double real, double imaginary) implements Numeric {
      */
     public static final Complex zero = new Complex(0.0F, 0.0F);
 
+    private final double imaginary;
+    private final double real;
+
+    public Complex(double real, double imaginary) {
+        this.real = real;
+        this.imaginary = imaginary;
+    }
+
     public Numeric one() {
         return one;
     }
@@ -34,63 +39,51 @@ public record Complex(double real, double imaginary) implements Numeric {
         return zero;
     }
 
+    public double real() {
+        return this.real;
+    }
+
+    public double imaginary() {
+        return this.imaginary;
+    }
+
     public Complex negate() {
         return new Complex(-this.real, -this.imaginary);
     }
 
     @Override
     public Numeric add(Numeric other) {
-        if (!(other instanceof Complex(double real1, double imaginary1))) {
+        if (!(other instanceof Complex addend)) {
             throw new IllegalArgumentException("Cannot add different types");
         }
 
-        return new Complex(this.real + real1, this.imaginary + imaginary1);
+        return new Complex(this.real + addend.real, this.imaginary + addend.imaginary);
     }
 
-    /**
-     * Returns a new {@code Complex} number that is the sum of this complex number and a real addend.
-     *
-     * @param addend the real number to add
-     * @return a new {@code Complex} representing the sum
-     */
     public Complex add(double addend) {
         return new Complex(this.real + addend, this.imaginary);
     }
 
-    /**
-     * Subtracts another {@link Numeric} from this complex number.
-     *
-     * @param other the numeric value to subtract, expected to be a {@code Complex}
-     * @return a new {@code Complex} representing the difference
-     * @throws IllegalArgumentException if {@code other} is not a {@code Complex}
-     */
     @Override
     public Numeric subtract(Numeric other) {
-        if (!(other instanceof Complex(double real1, double imaginary1))) {
+        if (!(other instanceof Complex subtrahend)) {
             throw new IllegalArgumentException("Cannot subtract different types");
         }
 
-        return new Complex(this.real - real1, this.imaginary - imaginary1);
+        return new Complex(this.real - subtrahend.real, this.imaginary - subtrahend.imaginary);
     }
 
-    /**
-     * Returns a new {@code Complex} number that is the difference between this complex number and a real subtrahend.
-     *
-     * @param subtrahend the real number to subtract
-     * @return a new {@code Complex} representing the difference
-     */
     public Complex subtract(double subtrahend) {
         return new Complex(this.real - subtrahend, this.imaginary);
     }
 
-
     @Override
     public Numeric multiply(Numeric other) {
-        if (!(other instanceof Complex(double real1, double imaginary1))) {
+        if (!(other instanceof Complex factor)) {
             throw new IllegalArgumentException("Cannot multiply different types");
         }
 
-        return multiply(this.real, this.imaginary, real1, imaginary1);
+        return multiply(this.real, this.imaginary, factor.real, factor.imaginary);
     }
 
     private static Complex multiply(double re1, double im1, double re2, double im2) {
@@ -151,23 +144,17 @@ public record Complex(double real, double imaginary) implements Numeric {
         return Double.isNaN(value) ? Math.copySign(0.0F, value) : value;
     }
 
-    /**
-     * Returns a new {@code Complex} number that is this complex number multiplied by a real factor.
-     *
-     * @param factor the real number to multiply by
-     * @return a new {@code Complex} representing the product
-     */
     public Complex multiply(double factor) {
         return new Complex(this.real * factor, this.imaginary * factor);
     }
 
     @Override
     public Numeric divide(Numeric other) {
-        if (!(other instanceof Complex(double real1, double imaginary1))) {
+        if (!(other instanceof Complex divisor)) {
             throw new IllegalArgumentException("Cannot multiply different types");
         }
 
-        return divide(this.real, this.imaginary, real1, imaginary1);
+        return divide(this.real, this.imaginary, divisor.real, divisor.imaginary);
     }
 
     private static Complex divide(double re1, double im1, double re2, double im2) {
@@ -214,13 +201,6 @@ public record Complex(double real, double imaginary) implements Numeric {
         return new Complex(x, y);
     }
 
-    /**
-     * Returns a new {@code Complex} number that is the quotient of this complex number divided by a real divisor.
-     *
-     * @param divisor the real number to divide by
-     * @return a new {@code Complex} representing the quotient
-     * @throws ArithmeticException if {@code divisor} is zero
-     */
     public Complex divide(double divisor) {
         return new Complex(this.real / divisor, this.imaginary / divisor);
     }
@@ -233,15 +213,28 @@ public record Complex(double real, double imaginary) implements Numeric {
     public boolean equals(Object other) {
         if (this == other) {
             return true;
-        } else if (!(other instanceof Complex(double real1, double imaginary1))) {
+        } else if (!(other instanceof Complex c)) {
             return false;
         } else {
-            return equals(this.real, real1) && equals(this.imaginary, imaginary1);
+            return equals(this.real, c.real) && equals(this.imaginary, c.imaginary);
         }
     }
 
     public int hashCode() {
         return 31 * (31 + Double.hashCode(this.real)) + Double.hashCode(this.imaginary);
+    }
+
+    @Override
+    public String toString() {
+        if (real == 0 && imaginary == 0) {
+            return "0";
+        } else if (imaginary == 0) {
+            return String.valueOf(real);
+        } else if (real == 0) {
+            return imaginary + "i";
+        } else {
+            return real + (imaginary > 0 ? " + " : " - ") + Math.abs(imaginary) + "i";
+        }
     }
 
     private static boolean equals(double x, double y) {

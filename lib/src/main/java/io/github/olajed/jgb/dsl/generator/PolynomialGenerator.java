@@ -58,6 +58,18 @@ public class PolynomialGenerator implements AstNode.Visitor<Void> {
     }
 
     /**
+     * Get the ring related to the configuration state.
+     * This method is meant to be used after {@link #generate(List)}
+     * otherwise it will return null.
+     * Useful method for formatting after the process.
+     *
+     * @return The polynomial ring inferred.
+     */
+    public PolynomialRing getRing() {
+        return ring;
+    }
+
+    /**
      * Converts a list of AST nodes into a list of {@link Polynomial} instances.
      *
      * <p>The method processes the input in two passes:
