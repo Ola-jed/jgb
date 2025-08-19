@@ -25,7 +25,7 @@ public final class GrobnerBasisAlgorithms {
      * any other polynomial in the basis.</p>
      *
      * @param polynomials the Grobner basis to reduce
-     * @param <T> the numeric type of the polynomial coefficients
+     * @param <T>         the numeric type of the polynomial coefficients
      * @return a reduced Grobner basis
      */
     public static <T extends Numeric> List<Polynomial<T>> reduceGrobnerBasis(List<Polynomial<T>> polynomials) {
@@ -92,4 +92,37 @@ public final class GrobnerBasisAlgorithms {
 
         return result;
     }
+
+    /**
+     * Checks whether a given list of polynomials forms a Gröbner basis using Buchberger's criterion.
+     *
+     * <p>
+     * This method verifies if the provided set of polynomials constitutes a Gröbner basis
+     * for the ideal they generate. It applies Buchberger's criterion by computing all
+     * S-polynomials for each distinct pair of polynomials and reducing them modulo the set.
+     * If any S-polynomial does not reduce to zero, the given set is not a Gröbner basis.
+     * </p>
+     *
+     * @param polynomials the list of polynomials to check
+     * @param <T>         the numeric type of the polynomial coefficients,
+     *                    which must extend {@link Numeric}
+     * @return {@code true} if the polynomials form a Gröbner basis;
+     * {@code false} otherwise
+     * @see Polynomial
+     */
+    public static <T extends Numeric> boolean isGrobnerBasis(List<Polynomial<T>> polynomials) {
+        for (var i = 0; i < polynomials.size(); i++) {
+            for (var j = i + 1; j < polynomials.size(); j++) {
+                var sPolynomial = PolynomialFunctions.sPolynomial(polynomials.get(i), polynomials.get(j));
+                var reductionResult = sPolynomial.reduce(polynomials);
+
+                if (!reductionResult.isZero()) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }
+
