@@ -48,7 +48,10 @@ public final class Complex implements Numeric {
     }
 
     public Complex negate() {
-        return new Complex(-this.real, -this.imaginary);
+        return new Complex(
+                this.real == 0 ? this.real : -this.real,
+                this.imaginary == 0 ? this.imaginary : -this.imaginary
+        );
     }
 
     @Override
