@@ -70,7 +70,7 @@ public final class NumericUtils {
             };
         } else {
             return switch (from) {
-                case GaloisFieldElement x -> new GaloisFieldElement(x.get(), x.modulo());
+                case GaloisFieldElement x -> x;
                 case Rational x -> {
                     if (x.get() % 1 == 0) {
                         yield new GaloisFieldElement((int) x.get(), modulo);

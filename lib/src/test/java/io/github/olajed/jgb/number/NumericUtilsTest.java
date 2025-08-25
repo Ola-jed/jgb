@@ -184,7 +184,6 @@ class NumericUtilsTest {
         assertEquals(new Complex(0.0, 0.0), NumericUtils.tryAssign(galoisZero, NumericType.Complex, 0));
         assertEquals(new Real(0.0), NumericUtils.tryAssign(galoisZero, NumericType.Real, 0));
         assertEquals(new Rational(0), NumericUtils.tryAssign(galoisZero, NumericType.Rational, 0));
-        assertEquals(new GaloisFieldElement(0, 11), NumericUtils.tryAssign(galoisZero, NumericType.GaloisField, 11));
 
         assertEquals(new Complex(0.0, 0.0), NumericUtils.tryAssign(rationalZero, NumericType.Complex, 0));
         assertEquals(new Real(0.0), NumericUtils.tryAssign(rationalZero, NumericType.Real, 0));

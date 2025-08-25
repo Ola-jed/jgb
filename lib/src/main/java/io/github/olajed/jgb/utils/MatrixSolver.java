@@ -8,6 +8,7 @@ import java.util.List;
  * Solver for matrix equations.
  * Use augmented rref.
  * The operations done on the main matrix are also done on the values list
+ *
  * @param <T> the numeric type of the  coefficients
  */
 @SuppressWarnings("unchecked")
@@ -45,21 +46,27 @@ public final class MatrixSolver<T extends Numeric> {
         var colCount = matrix.getFirst().size();
 
         // Ensure this is an Identity matrix
-        for(var column = 0; column < colCount; column++) {
-            var metOne = false;
+        var usedRows = new boolean[rowCount];
+        for (var column = 0; column < colCount; column++) {
+            var pivotRow = -1;
             for (var row = 0; row < rowCount; row++) {
-                if(matrix.get(row).get(column).equals(one)) {
-                    if(metOne) {
-                        return null; // Not solvable
+                if (matrix.get(row).get(column).equals(one)) {
+                    if (pivotRow != -1) {
+                        // More than one '1' in this column → not identity
+                        return null;
                     }
-
-                    metOne = true;
+                    pivotRow = row;
+                } else if (!matrix.get(row).get(column).equals(zero)) {
+                    // Any non-zero besides the pivot → not identity
+                    return null;
                 }
             }
 
-            if(!metOne) {
-                return null; // Not solvable
+            if (pivotRow == -1 || usedRows[pivotRow]) {
+                // No pivot in this column OR row already used
+                return null;
             }
+            usedRows[pivotRow] = true;
         }
 
         return values;
