@@ -38,6 +38,14 @@ public class Graph {
     }
 
     /**
+     * Get the edges of the graph
+     * @return the adjacency list
+     */
+    public List<Set<Integer>> getEdges() {
+        return adjacencyList;
+    }
+
+    /**
      * Generates the polynomial ideal generators corresponding to a k-coloring problem on this graph.
      *
      * <p>These polynomials encode the constraints for a proper k-coloring, where each vertex
