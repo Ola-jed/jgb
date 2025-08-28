@@ -73,14 +73,16 @@ public class Graph {
             }
 
             for (Integer v : neighbors) {
-                var monomials = new ArrayList<Monomial<Complex>>();
-                for (var i = 0; i < k; i++) {
-                    var exponents = vertexMonomial(k - 1 - i, u);
-                    exponents[v - 1] = i; // -1 because containers are 0-indexes
-                    monomials.add(new SparseMonomial<>(exponents, Complex.one));
+                // Only handle edge once: u < v
+                if (u < v) {
+                    var monomials = new ArrayList<Monomial<Complex>>();
+                    for (var i = 0; i < k; i++) {
+                        var exponents = vertexMonomial(k - 1 - i, u);
+                        exponents[v - 1] = i; // adjust index since containers are 0-based
+                        monomials.add(new SparseMonomial<>(exponents, Complex.one));
+                    }
+                    polynomials.add(new Polynomial<>(monomials, vertexCount, GraphProblemsConstants.ORDERING));
                 }
-
-                polynomials.add(new Polynomial<>(monomials, vertexCount, GraphProblemsConstants.ORDERING));
             }
         }
 
