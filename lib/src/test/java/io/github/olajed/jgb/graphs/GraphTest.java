@@ -7,7 +7,6 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GraphTest {
-
     @Test
     void testGraphConstruction() {
         List<Set<Integer>> adjacency = new ArrayList<>();
