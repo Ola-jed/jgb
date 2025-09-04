@@ -1,5 +1,5 @@
 group = "io.github.ola-jed.jgb"
-version = "0.0.2"
+version = "0.0.3"
 
 plugins {
     id("java")

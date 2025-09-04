@@ -21,19 +21,19 @@ Add the following dependency to your `pom.xml`:
 <dependency>
   <groupId>io.github.ola-jed.jgb</groupId>
   <artifactId>lib</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.3</version>
 </dependency>
 ```
 ### Gradle
 Add the following to your build.gradle dependencies :
 
 ````groovy
-implementation 'io.github.ola-jed.jgb:lib:0.0.1'
+implementation 'io.github.ola-jed.jgb:lib:0.0.3'
 ````
 Or for the Kotlin DSL (build.gradle.kts):
 
 ````kotlin
-implementation("io.github.ola-jed.jgb:lib:0.0.1")
+implementation("io.github.ola-jed.jgb:lib:0.0.3")
 ````
 ---
 ## Features
